@@ -8,12 +8,10 @@ import {
 
 let GLOBAL_STATE = {
   editingPalette: false,
-  transforming: false,
 
   activeTool: "brush",
   activeSymbol: 0,
 
-  chartBackground: "#ffffff",
   symbolPalette: {},
   symbolMap: DEFAULT_SYMBOLS,
   patternLibrary: DEFAULT_PATTERN_LIBRARY,
@@ -26,7 +24,7 @@ let GLOBAL_STATE = {
   simPan: { x: 0, y: 0 },
 
   activeYarn: 0,
-  yarnPalette: ["rgba(16,18,189,1)", "rgba(235,233,187,1)", "rgba(247,85,0,1)"], // Colors of the yarns
+  yarnPalette: ["#1013bd", "#ebe9bb", "#f75500"], // Colors of the yarns
   yarnSequence: new Bimp(1, 8, [1, 1, 1, 1, 2, 2, 0, 0]),
 
   editingRepeat: -1,
@@ -47,7 +45,6 @@ let GLOBAL_STATE = {
     },
   ],
 
-  // chart: Bimp.empty(5, 5, 0),
   chart: Bimp.empty(48, 60, 0),
 
   reverseScroll: false,

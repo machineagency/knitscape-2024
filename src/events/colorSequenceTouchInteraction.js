@@ -26,8 +26,6 @@ function brushColor(e, colorCanvas) {
   }
 
   function end() {
-    dispatch({ transforming: false });
-
     colorCanvas.removeEventListener("touchmove", move);
     colorCanvas.removeEventListener("touchcancel", end);
     colorCanvas.removeEventListener("touchend", end);
@@ -43,8 +41,6 @@ function resizeColorCanvas(e) {
   const start = e.touches[0].clientY;
 
   const end = () => {
-    dispatch({ transforming: false });
-
     window.removeEventListener("touchmove", onmove);
     window.removeEventListener("touchend", end);
     window.removeEventListener("touchcancel", end);
@@ -70,14 +66,10 @@ function resizeColorCanvas(e) {
 
 export function colorSequenceTouchInteraction(canvas, resizeDragger) {
   canvas.addEventListener("touchstart", (e) => {
-    dispatch({ transforming: true });
-
     brushColor(e, canvas);
   });
 
   resizeDragger.addEventListener("touchstart", (e) => {
-    dispatch({ transforming: true });
-
     resizeColorCanvas(e);
   });
 }

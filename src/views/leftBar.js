@@ -1,7 +1,6 @@
 import { html } from "lit-html";
 import { GLOBAL_STATE, dispatch } from "../state";
 import { getRandomColor, shuffle } from "../utils";
-import jscolor from "@eastdesire/jscolor";
 import { Bimp } from "../lib/Bimp";
 
 function symbolPicker() {
@@ -20,7 +19,7 @@ function symbolPicker() {
   </div>`;
 }
 
-function deleteColor(index) {
+function deleteYarn(index) {
   if (GLOBAL_STATE.yarnPalette.length == 1) {
     alert("you need some color in your life");
     return;
@@ -42,72 +41,61 @@ function deleteColor(index) {
   });
 }
 
-function editColor(index) {
-  const target = document.getElementById(`color-${index}`);
-  if (!target.jscolor) {
-    const picker = new jscolor(target, {
-      preset: "dark large",
-      format: "hexa",
-      value: GLOBAL_STATE.yarnPalette[index],
-      onInput: () => {
-        const newPalette = [...GLOBAL_STATE.yarnPalette];
-        newPalette[index] = picker.toRGBAString();
-        dispatch({
-          yarnPalette: newPalette,
-          yarnSequence: GLOBAL_STATE.yarnSequence,
-        });
-      },
-      previewElement: null,
-    });
-  }
-  target.jscolor.show();
+function editYarn(e, index) {
+  const newPalette = [...GLOBAL_STATE.yarnPalette];
+  newPalette[index] = e.target.value;
+  dispatch({
+    yarnPalette: newPalette,
+    yarnSequence: GLOBAL_STATE.yarnSequence,
+  });
 }
 
 function yarnPicker() {
+  const { yarnPalette, editingPalette, activeYarn } = GLOBAL_STATE;
+
   return html`<div id="yarn-picker">
     <h3>Yarns</h3>
     <div>
       <button
-        class="btn icon ${GLOBAL_STATE.editingPalette ? "selected" : ""}"
-        @click=${() =>
-          dispatch({ editingPalette: !GLOBAL_STATE.editingPalette })}>
+        class="btn icon ${editingPalette ? "selected" : ""}"
+        @click=${() => dispatch({ editingPalette: !editingPalette })}>
         <i class="fa-solid fa-pen"></i>
       </button>
       <button
         class="btn icon"
         @click=${() => {
-          let newPalette = [...GLOBAL_STATE.yarnPalette];
+          let newPalette = [...yarnPalette];
           newPalette.push(getRandomColor());
           dispatch({ yarnPalette: newPalette });
         }}>
         <i class="fa-solid fa-plus"></i>
       </button>
     </div>
-    ${GLOBAL_STATE.yarnPalette.map(
+    ${yarnPalette.map(
       (hexa, index) =>
         html`<button
-          class="btn solid color-select ${index == GLOBAL_STATE.activeYarn
+          class="btn solid color-select ${index == activeYarn
             ? "selected"
             : ""}"
           @click=${() => dispatch({ activeYarn: index })}>
           <div class="color-label">${index + 1}</div>
           <div class="color-preview" style="--current: ${hexa};">
-            ${GLOBAL_STATE.editingPalette
+            ${editingPalette
               ? html`
+                  <label for="picker-${index}" class="edit-color">
+                    <i class="fa-solid fa-pen"></i>
+                  </label>
+                  <input
+                    type="color"
+                    id="picker-${index}"
+                    style="visibility: hidden;"
+                    value="${yarnPalette[index]}"
+                    @input=${(e) => editYarn(e, index)} />
                   <button
                     class="delete-color-button"
-                    @click=${() => deleteColor(index)}>
+                    @click=${() => deleteYarn(index)}>
                     <i class="fa-solid fa-circle-xmark"></i>
                   </button>
-                  <button
-                    id="color-${index}"
-                    class="edit-color-btn"
-                    @click=${(e) => editColor(index)}></button>
-                  <div
-                    class="edit-color-icon"
-                    @click=${(e) => editColor(index)}>
-                    <i class="fa-solid fa-pen"></i>
-                  </div>
                 `
               : ""}
           </div>
@@ -119,7 +107,7 @@ function yarnPicker() {
         class="btn icon"
         @click=${() => {
           dispatch({
-            yarnPalette: [...shuffle(GLOBAL_STATE.yarnPalette)],
+            yarnPalette: [...shuffle(yarnPalette)],
           });
         }}>
         <i class="fa-solid fa-arrows-rotate"></i>
@@ -128,9 +116,8 @@ function yarnPicker() {
         class="btn icon"
         @click=${() => {
           dispatch({
-            yarnPalette: Array.from(
-              Array(GLOBAL_STATE.yarnPalette.length),
-              () => getRandomColor()
+            yarnPalette: Array.from(Array(yarnPalette.length), () =>
+              getRandomColor()
             ),
           });
         }}>

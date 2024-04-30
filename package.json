@@ -12,7 +12,6 @@
     "deploy": "vite build && echo knitscape.net > ./dist/CNAME && gh-pages -d dist"
   },
   "dependencies": {
-    "@eastdesire/jscolor": "^2.5.2",
     "d3": "^7.9.0",
     "lit-html": "^3.1.3",
     "split.js": "^1.6.5",

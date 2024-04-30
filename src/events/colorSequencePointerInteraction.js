@@ -26,7 +26,6 @@ function brushColor(e, colorCanvas) {
   }
 
   function end() {
-    dispatch({ transforming: false });
     colorCanvas.removeEventListener("pointermove", move);
     colorCanvas.removeEventListener("pointerup", end);
     colorCanvas.removeEventListener("pointerleave", end);
@@ -46,7 +45,6 @@ function resizeColorCanvas(e) {
 
   function end() {
     document.body.classList.remove("grabbing");
-    dispatch({ transforming: false });
 
     window.removeEventListener("pointermove", move);
     window.removeEventListener("pointerup", end);
@@ -72,14 +70,10 @@ function resizeColorCanvas(e) {
 
 export function colorSequencePointerInteraction(colorCanvas, resizeDragger) {
   colorCanvas.addEventListener("pointerdown", (e) => {
-    dispatch({ transforming: true });
-
     brushColor(e, colorCanvas);
   });
 
   resizeDragger.addEventListener("pointerdown", (e) => {
-    dispatch({ transforming: true });
-
     resizeColorCanvas(e);
   });
 }
