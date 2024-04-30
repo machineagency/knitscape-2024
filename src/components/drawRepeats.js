@@ -7,18 +7,6 @@ function clearLastDrawn(lastDrawn) {
   }
 }
 
-function sizeCanvasToBitmap(canvas, bitmapWidth, bitmapHeight) {
-  canvas.width = GLOBAL_STATE.scale * bitmapWidth;
-  canvas.height = GLOBAL_STATE.scale * bitmapHeight;
-  canvas.style.width = `${
-    (GLOBAL_STATE.scale * bitmapWidth) / devicePixelRatio
-  }px`;
-
-  canvas.style.height = `${
-    (GLOBAL_STATE.scale * bitmapHeight) / devicePixelRatio
-  }px`;
-}
-
 export function drawRepeats() {
   return ({ state }) => {
     let { scale, symbolMap, repeats, symbolLineWidth } = state;

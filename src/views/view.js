@@ -1,13 +1,12 @@
 import { html } from "lit-html";
 import { when } from "lit-html/directives/when.js";
-import { dispatch, GLOBAL_STATE } from "../state";
+import { GLOBAL_STATE } from "../state";
 
 import { taskbar } from "./taskbar";
 import { downloadModal } from "./downloadModal";
 import { libraryModal } from "./libraryModal";
 import { settingsModal } from "./settingsModal";
 import { chartTools } from "./chartTools";
-import { debugPane } from "./debugPane";
 import { leftBar } from "./leftBar";
 import { repeatCanvas } from "./repeatCanvas";
 import { repeatTools } from "./repeatTools";
@@ -49,6 +48,5 @@ export function view() {
       </div>
       ${simulationView()}
     </div>
-    ${when(GLOBAL_STATE.debug, debugPane)}
   `;
 }

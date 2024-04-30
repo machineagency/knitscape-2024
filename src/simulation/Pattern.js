@@ -9,27 +9,7 @@ const pixToOp = ["K", "P", "M", "T"];
 
 export class Pattern {
   constructor(bitmap) {
-    // this.ops = Array.from(bitmap.pixels)
-
-    //   .map((val) => pixToOp[val])
-    //   .toReversed()
-    //   .filter((val, index) => {
-    //     let currX = index % bitmap.width;
-    //     if (needles[currX] == 1) return false;
-    //     return true;
-    //   });
-
-    // this.width = needles.filter((val) => (val == 1 ? false : true)).length;
-    // this.height = bitmap.height;
-
     this.ops = Array.from(bitmap.pixels).map((val) => pixToOp[val]);
-    // .toReversed()
-    // .filter((val, index) => {
-    //   let currX = index % bitmap.width;
-    //   if (needles[currX] == 1) return false;
-    //   return true;
-    // });
-
     this.width = bitmap.width;
     this.height = bitmap.height;
   }

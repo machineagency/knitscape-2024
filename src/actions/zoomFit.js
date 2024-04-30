@@ -8,15 +8,16 @@ import {
 } from "../constants";
 
 export function toggleFullscreen() {
-  var doc = window.document;
-  var docEl = doc.documentElement;
+  const doc = window.document;
+  const docEl = doc.documentElement;
 
-  var requestFullScreen =
+  const requestFullScreen =
     docEl.requestFullscreen ||
     docEl.mozRequestFullScreen ||
     docEl.webkitRequestFullScreen ||
     docEl.msRequestFullscreen;
-  var cancelFullScreen =
+
+  const cancelFullScreen =
     doc.exitFullscreen ||
     doc.mozCancelFullScreen ||
     doc.webkitExitFullscreen ||

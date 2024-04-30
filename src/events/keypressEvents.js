@@ -28,10 +28,6 @@ const hotkeys = {
       editingRepeat: -1,
       showRepeatLibrary: false,
     }),
-  d: () =>
-    dispatch({
-      debug: !GLOBAL_STATE.debug,
-    }),
 };
 
 function symbolSwitch(index) {

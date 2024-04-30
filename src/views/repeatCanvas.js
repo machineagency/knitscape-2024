@@ -1,4 +1,4 @@
-import { GLOBAL_STATE, dispatch } from "../state";
+import { GLOBAL_STATE } from "../state";
 import { html } from "lit-html";
 import { when } from "lit-html/directives/when.js";
 

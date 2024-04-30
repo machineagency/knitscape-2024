@@ -69,7 +69,7 @@ export function taskbar() {
       <button
         class="btn icon"
         @click=${() =>
-          window.open("https://github.com/branchwelder/knitscape")}>
+          window.open("https://github.com/machineagency/swatchscape")}>
         <i class="fa-brands fa-github"></i>
       </button>
 

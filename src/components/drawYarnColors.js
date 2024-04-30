@@ -1,5 +1,3 @@
-import { sizeCanvasToBitmap } from "../actions/zoomFit";
-
 export function drawYarnColors(yarnColorCanvas) {
   return ({ state }) => {
     let { scale, yarnPalette, yarnSequence, chart } = state;

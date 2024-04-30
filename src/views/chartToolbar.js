@@ -1,5 +1,5 @@
 import { html } from "lit-html";
-import { GLOBAL_STATE, dispatch, undo } from "../state";
+import { GLOBAL_STATE } from "../state";
 import { MIN_SCALE, MAX_SCALE } from "../constants";
 import { centerZoom, fitChart } from "../actions/zoomFit";
 

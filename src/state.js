@@ -47,21 +47,6 @@ let GLOBAL_STATE = {
     },
   ],
 
-  repeatLibrary: [
-    {
-      title: "blank",
-      bitmap: new Bimp(2, 2, [0, 0, 0, 0]),
-    },
-    {
-      title: "checks",
-      bitmap: new Bimp(2, 2, [0, 2, 2, 0]),
-    },
-    {
-      title: "stripe",
-      bitmap: new Bimp(2, 2, [0, 2, 0, 2]),
-    },
-  ], // Library of motifs which can be used as repeats
-
   // chart: Bimp.empty(5, 5, 0),
   chart: Bimp.empty(48, 60, 0),
 
@@ -81,8 +66,6 @@ let GLOBAL_STATE = {
   showLibrary: false,
   showSettings: false,
   showDownload: false,
-  showRepeatLibrary: false,
-  debug: false,
 
   snapshots: [], // Array of snapshot history
   lastSnapshot: 0, // time of last snapshot

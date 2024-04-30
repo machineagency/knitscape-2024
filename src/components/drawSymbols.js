@@ -1,4 +1,3 @@
-import { GLOBAL_STATE } from "../state";
 import { SYMBOL_PATHS, SYMBOL_BITS } from "../constants";
 
 export function drawSymbols(symbolCanvas) {

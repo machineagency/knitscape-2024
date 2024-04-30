@@ -1,7 +1,6 @@
-import { GLOBAL_STATE } from "../state";
 import { SYMBOL_PATHS } from "../constants";
 
-export function drawSymbolPicker(symbolCanvas) {
+export function drawSymbolPicker() {
   return ({ state }) => {
     let { symbolMap, symbolLineWidth } = state;
 
