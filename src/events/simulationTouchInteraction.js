@@ -1,6 +1,6 @@
 import { GLOBAL_STATE, dispatch } from "../state";
 
-function pan(e, sim) {
+function pan(e) {
   const startPos = { x: e.clientX, y: e.clientY };
   const startPan = GLOBAL_STATE.simPan;
 
@@ -12,18 +12,18 @@ function pan(e, sim) {
   }
 
   function end() {
-    sim.removeEventListener("touchmove", move);
-    sim.removeEventListener("touchcancel", end);
-    sim.removeEventListener("touchend", end);
+    window.removeEventListener("touchmove", move);
+    window.removeEventListener("touchcancel", end);
+    window.removeEventListener("touchend", end);
   }
 
-  sim.addEventListener("touchmove", move);
-  sim.addEventListener("touchcancel", end);
-  sim.addEventListener("touchend", end);
+  window.addEventListener("touchmove", move);
+  window.addEventListener("touchcancel", end);
+  window.addEventListener("touchend", end);
 }
 
 export function simulationTouchInteraction(simContainer) {
   simContainer.addEventListener("touchstart", (e) => {
-    pan(e.touches[0], simContainer);
+    pan(e.touches[0]);
   });
 }

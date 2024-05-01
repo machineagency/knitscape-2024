@@ -1,7 +1,8 @@
 import { html } from "lit-html";
 import { GLOBAL_STATE, dispatch } from "../state";
-import { getRandomColor, shuffle } from "../utils";
+import { shuffleArray } from "../utils";
 import { Bimp } from "../lib/Bimp";
+import randomColor from "randomcolor";
 
 function symbolPicker() {
   return html` <div id="symbol-picker">
@@ -65,7 +66,7 @@ function yarnPicker() {
         class="btn icon"
         @click=${() => {
           let newPalette = [...yarnPalette];
-          newPalette.push(getRandomColor());
+          newPalette.push(randomColor());
           dispatch({ yarnPalette: newPalette });
         }}>
         <i class="fa-solid fa-plus"></i>
@@ -107,7 +108,7 @@ function yarnPicker() {
         class="btn icon"
         @click=${() => {
           dispatch({
-            yarnPalette: [...shuffle(yarnPalette)],
+            yarnPalette: shuffleArray(yarnPalette),
           });
         }}>
         <i class="fa-solid fa-arrows-rotate"></i>
@@ -116,9 +117,7 @@ function yarnPicker() {
         class="btn icon"
         @click=${() => {
           dispatch({
-            yarnPalette: Array.from(Array(yarnPalette.length), () =>
-              getRandomColor()
-            ),
+            yarnPalette: randomColor({ count: yarnPalette.length }),
           });
         }}>
         <i class="fa-solid fa-dice"></i>

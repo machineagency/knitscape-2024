@@ -1,7 +1,7 @@
 import { GLOBAL_STATE, dispatch } from "../state";
 import { zoomSimulationAtPoint } from "../actions/zoomFit";
 
-function pan(e, sim) {
+function pan(e) {
   const startPos = { x: e.clientX, y: e.clientY };
   const startPan = GLOBAL_STATE.simPan;
 
@@ -17,14 +17,14 @@ function pan(e, sim) {
   }
 
   function end() {
-    sim.removeEventListener("pointermove", move);
-    sim.removeEventListener("pointerup", end);
-    sim.removeEventListener("pointerleave", end);
+    window.removeEventListener("pointermove", move);
+    window.removeEventListener("pointerup", end);
+    window.removeEventListener("pointerleave", end);
   }
 
-  sim.addEventListener("pointermove", move);
-  sim.addEventListener("pointerup", end);
-  sim.addEventListener("pointerleave", end);
+  window.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", end);
+  window.addEventListener("pointerleave", end);
 }
 
 export function simulationPointerInteraction(simContainer) {
@@ -55,6 +55,6 @@ export function simulationPointerInteraction(simContainer) {
   simContainer.addEventListener("pointerdown", (e) => {
     dispatch({ editingRepeat: -1 });
 
-    pan(e, simContainer);
+    pan(e);
   });
 }

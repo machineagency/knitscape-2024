@@ -52,10 +52,7 @@ let GLOBAL_STATE = {
   rows: 40, //punchcard rows
   numSides: 8, //number of punch sides
 
-  // Various UI pane states
-  showLibrary: false,
-  showSettings: false,
-  showDownload: false,
+  activeModal: null, // A string with the current modal (download, library, settings)
 
   snapshots: [], // Array of snapshot history
   lastSnapshot: 0, // time of last snapshot

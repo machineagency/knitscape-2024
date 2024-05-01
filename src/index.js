@@ -31,7 +31,6 @@ import { simulationTouchInteraction } from "./events/simulationTouchInteraction"
 import { drawSymbolPicker } from "./components/drawSymbolPicker";
 import { resizeCanvases } from "./components/resizeCanvases";
 import { runSimulation } from "./components/runSimulation";
-import { closeModals } from "./events/closeModals";
 import { generateChart } from "./components/generateChart";
 import { isMobile } from "./utils";
 
@@ -56,7 +55,6 @@ function initKeyboard() {
   repeatPointerInteraction(repeatContainer);
   colorSequencePointerInteraction(yarnSequenceEditorCanvas, colorDragger);
   simulationPointerInteraction(simContainer);
-  closeModals();
 }
 
 function initTouch() {
@@ -66,7 +64,6 @@ function initTouch() {
   repeatTouchInteraction(repeatContainer);
   colorSequenceTouchInteraction(yarnSequenceEditorCanvas, colorDragger);
   simulationTouchInteraction(simContainer);
-  closeModals();
 }
 
 function measureWindow() {

@@ -4,7 +4,7 @@ import { toolData } from "../constants";
 const ctrlShortcuts = {
   a: () => console.log("select all?"),
   z: () => undo(),
-  s: () => dispatch({ showDownload: true }),
+  s: () => dispatch({ activeModal: "download" }),
 };
 
 const hotkeys = {
@@ -20,14 +20,7 @@ const hotkeys = {
   g: () => dispatch({ grid: !GLOBAL_STATE.grid }),
 
   // UI
-  Escape: () =>
-    dispatch({
-      showLibrary: false,
-      showSettings: false,
-      showDownload: false,
-      editingRepeat: -1,
-      showRepeatLibrary: false,
-    }),
+  Escape: () => dispatch({ activeModal: null }),
 };
 
 function symbolSwitch(index) {
@@ -36,19 +29,11 @@ function symbolSwitch(index) {
 
 export function addKeypressListeners() {
   window.addEventListener("keydown", (e) => {
-    // if (
-    //   !(
-    //     GLOBAL_STATE.showSettings ||
-    //     GLOBAL_STATE.showDownload ||
-    //     GLOBAL_STATE.showLibrary
-    //   )
-    // ) {
     if (e.ctrlKey && e.key.toLowerCase() in ctrlShortcuts) {
       e.preventDefault();
       ctrlShortcuts[e.key.toLowerCase()]();
     } else if (e.key in hotkeys) hotkeys[e.key]();
     else if (/^[0-9]$/i.test(e.key)) symbolSwitch(Number(e.key) - 1);
-    // }
     const newHeldKeys = new Set(GLOBAL_STATE.heldKeys);
     newHeldKeys.add(e.key);
     dispatch({ heldKeys: newHeldKeys });

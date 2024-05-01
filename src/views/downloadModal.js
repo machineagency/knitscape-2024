@@ -1,10 +1,7 @@
 import { html } from "lit-html";
 import {
-  downloadBMP,
-  downloadSVG,
   downloadJSON,
   downloadSilverKnitTxt,
-  downloadPNG,
   downloadKniterate,
   downloadPunchcard,
 } from "../actions/exporters";
@@ -20,14 +17,6 @@ export function downloadModal() {
       <button class="btn solid" @click=${() => downloadJSON()}>
         Pattern JSON
       </button>
-      <!-- <button class="btn solid" @click=${() =>
-        downloadPNG()}>Chart PNG</button>
-      <button class="btn solid" @click=${() => downloadSVG()}>
-        Simulation SVG
-      </button> -->
-      <!-- <button class="btn solid" @click=${() => downloadBMP()}>
-        Windows BMP (Silver Knit)
-      </button> -->
       <button class="btn solid" @click=${() => downloadSilverKnitTxt()}>
         TXT (Silver Knit)
       </button>

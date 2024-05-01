@@ -24,14 +24,15 @@ function updateChartHeight(newHeight) {
 }
 
 export function taskbar() {
+  const { chart, activeModal } = GLOBAL_STATE;
   return html`<div id="taskbar">
-    <h1 class="site-title">KnitScape</h1>
+    <h1 class="site-title">swatchscape</h1>
     <div id="chart-size-controls">
       <label>Width</label>
       <input
         class="input"
         type="number"
-        .value=${GLOBAL_STATE.chart.width}
+        .value=${chart.width}
         @change=${(e) => updateChartWidth(Number(e.target.value))}
         min="5"
         max="1000" />
@@ -39,7 +40,7 @@ export function taskbar() {
       <input
         class="input"
         type="number"
-        .value=${GLOBAL_STATE.chart.height}
+        .value=${chart.height}
         @change=${(e) => updateChartHeight(Number(e.target.value))}
         min="5"
         max="1000" />
@@ -54,17 +55,28 @@ export function taskbar() {
       <button class="btn icon" @click=${() => uploadFile()}>
         <i class="fa-solid fa-upload"></i>
       </button>
-      <button class="btn icon" @click=${() => dispatch({ showDownload: true })}>
+      <button
+        class="btn icon ${activeModal == "download" ? "open" : ""}"
+        @click=${() =>
+          dispatch({
+            activeModal: activeModal == "download" ? null : "download",
+          })}>
         <i class="fa-solid fa-download"></i>
       </button>
       <button
-        class="btn icon ${GLOBAL_STATE.showLibrary ? "open" : ""}"
-        @click=${() => dispatch({ showLibrary: !GLOBAL_STATE.showLibrary })}>
+        class="btn icon ${activeModal == "library" ? "open" : ""}"
+        @click=${() =>
+          dispatch({
+            activeModal: activeModal == "library" ? null : "library",
+          })}>
         <i class="fa-solid fa-book"></i>
       </button>
       <button
-        class="btn icon ${GLOBAL_STATE.showSettings ? "open" : ""}"
-        @click=${() => dispatch({ showSettings: !GLOBAL_STATE.showSettings })}>
+        class="btn icon ${activeModal == "settings" ? "open" : ""}"
+        @click=${() =>
+          dispatch({
+            activeModal: activeModal == "settings" ? null : "settings",
+          })}>
         <i class="fa-solid fa-gear"></i>
       </button>
       <button

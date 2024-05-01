@@ -2,14 +2,12 @@
 
 priority
 
-- add a favicon
-- remove multiple repeats/repeat positioning/repeat area - use knitscape for
-  that
-- Rework colorpicker
 - Ensure touch pan/zoom works properly
 - Switch topology and sim to my newer version
 - fix BMP export
 - add CSV export
+- fix zoom
+- add some sort of performance metric?
 
 simulation
 

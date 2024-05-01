@@ -2,7 +2,7 @@ import { GLOBAL_STATE, dispatch } from "../state";
 import { posAtCoords } from "../utils";
 import { zoomAtPoint } from "../actions/zoomFit";
 
-function pan(e, target) {
+function pan(e) {
   const startPos = { x: e.clientX, y: e.clientY };
   const startPan = GLOBAL_STATE.chartPan;
 
@@ -18,21 +18,20 @@ function pan(e, target) {
   }
 
   function end() {
-    target.removeEventListener("pointermove", move);
-    target.removeEventListener("pointerup", end);
-    target.removeEventListener("pointerleave", end);
+    window.removeEventListener("pointermove", move);
+    window.removeEventListener("pointerup", end);
+    window.removeEventListener("pointerleave", end);
   }
 
-  target.addEventListener("pointermove", move);
-  target.addEventListener("pointerup", end);
-  target.addEventListener("pointerleave", end);
+  window.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", end);
+  window.addEventListener("pointerleave", end);
 }
 
 export function desktopPointerPanZoom(desktop) {
   desktop.addEventListener("pointerdown", (e) => {
     if (e.target == desktop || e.target.id == "symbol-canvas") {
-      // dispatch({ editingRepeat: -1 });
-      pan(e, desktop);
+      pan(e);
     }
   });
 

@@ -29,7 +29,7 @@ export function newPattern() {
 }
 
 export function loadLibraryPattern(path) {
-  dispatch({ showLibrary: false });
+  dispatch({ activeModal: null });
   GLOBAL_STATE.patternLibrary[path]().then((mod) => loadJSON(mod));
 }
 

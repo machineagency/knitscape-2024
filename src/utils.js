@@ -114,8 +114,14 @@ function hexToRgb(hex) {
     : null;
 }
 
-export function shuffle(arr) {
-  return arr.sort(() => (Math.random() > 0.5 ? 1 : -1));
+export function shuffleArray(array) {
+  // Sattolo cycle
+  let newArr = [...array];
+  for (let i = newArr.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * i);
+    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+  }
+  return newArr;
 }
 
 export function makeBMP(repeatBimp, colorRepeat, palette) {

@@ -44,11 +44,10 @@ function resizeColorCanvas(e) {
   e.target.classList.remove("grab");
 
   function end() {
-    document.body.classList.remove("grabbing");
-
     window.removeEventListener("pointermove", move);
     window.removeEventListener("pointerup", end);
 
+    document.body.classList.remove("grabbing");
     e.target.classList.add("grab");
   }
 
