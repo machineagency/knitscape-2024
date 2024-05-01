@@ -3,28 +3,22 @@ import { Bimp } from "../lib/Bimp";
 
 export function generateChart() {
   return ({ state }) => {
-    let repeats = state.repeats;
+    let repeat = state.repeat;
     function regen() {
-      let chart = Bimp.empty(
+      let chart = Bimp.fromTile(
         GLOBAL_STATE.chart.width,
         GLOBAL_STATE.chart.height,
-        0
+        GLOBAL_STATE.repeat.vFlip()
       );
-      for (const repeat of repeats) {
-        let tiled = Bimp.fromTile(
-          repeat.area[0],
-          repeat.area[1],
-          repeat.bitmap.vFlip()
-        ).vFlip();
-        chart = chart.overlay(tiled, repeat.pos);
-      }
+
       dispatch({ chart });
     }
     regen();
+
     return {
       syncState(state) {
-        if (repeats != state.repeats) {
-          repeats = state.repeats;
+        if (repeat != state.repeat) {
+          repeat = state.repeat;
           regen();
         }
       },

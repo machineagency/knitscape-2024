@@ -49,7 +49,7 @@ function pattern() {
   const rp = Bimp.fromTile(
     cols,
     GLOBAL_STATE.rows,
-    GLOBAL_STATE.repeats[0].bitmap
+    GLOBAL_STATE.repeat
   ).make2d();
   const punches = [];
 

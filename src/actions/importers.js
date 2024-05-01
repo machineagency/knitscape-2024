@@ -4,7 +4,7 @@ import { fitChart } from "./zoomFit";
 import { getRandomColor } from "../utils";
 
 function loadJSON(patternJSON) {
-  let { yarnSequence, yarnPalette, repeats, width, height } = patternJSON;
+  let { yarnSequence, yarnPalette, repeat, width, height } = patternJSON;
 
   dispatch({
     yarnPalette,
@@ -12,13 +12,7 @@ function loadJSON(patternJSON) {
     height,
     yarnSequence: Bimp.fromJSON(yarnSequence),
     chart: Bimp.empty(width, height, 0),
-    repeats: repeats.map(({ bitmap, pos, area }) => {
-      return {
-        bitmap: Bimp.fromJSON(bitmap),
-        pos,
-        area,
-      };
-    }),
+    repeat: Bimp.fromJSON(repeat),
   });
 
   fitChart();
@@ -26,21 +20,10 @@ function loadJSON(patternJSON) {
 
 export function newPattern() {
   dispatch({
-    repeats: [],
     yarnSequence: new Bimp(1, 4, [0, 0, 1, 1]),
     yarnPalette: [getRandomColor(), getRandomColor()],
     chart: Bimp.empty(30, 40, 0),
-    repeats: [
-      {
-        bitmap: new Bimp(
-          4,
-          4,
-          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ),
-        area: [30, 40],
-        pos: [0, 0],
-      },
-    ],
+    repeat: new Bimp(4, 4, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
   });
   fitChart();
 }

@@ -1,50 +1,19 @@
 import { GLOBAL_STATE } from "../state";
 import { SYMBOL_PATHS, SYMBOL_BITS } from "../constants";
 
-function clearLastDrawn(lastDrawn) {
-  for (const repeat of lastDrawn) {
-    repeat.bitmap = null;
-  }
-}
-
 export function drawRepeats() {
   return ({ state }) => {
-    let { scale, symbolMap, repeats, symbolLineWidth } = state;
+    let { scale, symbolMap, repeat, symbolLineWidth } = state;
 
-    let lastDrawn = repeats.map((repeat) => {
-      return { bitmap: null, pos: [...repeat.pos] };
-    });
+    let lastDrawn = repeat;
 
-    function scaleAll(repeatIndex, width, height) {
-      let canvases = [
-        document.getElementById(`repeat-${repeatIndex}`),
-        document.getElementById(`repeat-${repeatIndex}-grid`),
-        document.getElementById(`repeat-${repeatIndex}-outline`),
-      ];
-
-      canvases.forEach((canvas) => {
-        if (canvas == null) {
-          lastDrawn[repeatIndex].bitmap = null;
-          return;
-        }
-        canvas.width = GLOBAL_STATE.scale * width;
-        canvas.height = GLOBAL_STATE.scale * height;
-        canvas.style.width = `${
-          (GLOBAL_STATE.scale * width) / devicePixelRatio
-        }px`;
-        canvas.style.height = `${
-          (GLOBAL_STATE.scale * height) / devicePixelRatio
-        }px`;
-      });
-    }
-
-    function drawGrid(repeatIndex) {
+    function drawGrid() {
       if (!GLOBAL_STATE.grid) return;
 
-      const gridCanvas = document.getElementById(`repeat-${repeatIndex}-grid`);
+      const gridCanvas = document.getElementById(`repeat-grid`);
       const ctx = gridCanvas.getContext("2d");
-      const width = repeats[repeatIndex].bitmap.width;
-      const height = repeats[repeatIndex].bitmap.height;
+      const width = repeat.width;
+      const height = repeat.height;
 
       if (scale < 15) {
         ctx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
@@ -72,11 +41,32 @@ export function drawRepeats() {
       ctx.restore();
     }
 
-    function draw(repeatIndex) {
+    function scaleCanvas(width, height) {
+      let canvases = [
+        document.getElementById(`repeat`),
+        document.getElementById(`repeat-grid`),
+        document.getElementById(`repeat-outline`),
+      ];
+
+      canvases.forEach((canvas) => {
+        if (canvas == null) {
+          lastDrawn = null;
+          return;
+        }
+        canvas.width = GLOBAL_STATE.scale * width;
+        canvas.height = GLOBAL_STATE.scale * height;
+        canvas.style.width = `${
+          (GLOBAL_STATE.scale * width) / devicePixelRatio
+        }px`;
+        canvas.style.height = `${
+          (GLOBAL_STATE.scale * height) / devicePixelRatio
+        }px`;
+      });
+    }
+
+    function draw() {
       // Draws only the pixels that have changed
-      const ctx = document
-        .getElementById(`repeat-${repeatIndex}`)
-        .getContext("2d");
+      const ctx = document.getElementById(`repeat`).getContext("2d");
       ctx.imageSmoothingEnabled = false;
 
       ctx.lineWidth = 0.01 * symbolLineWidth;
@@ -84,16 +74,13 @@ export function drawRepeats() {
       ctx.resetTransform();
       ctx.translate(-0.5, -0.5);
 
-      const repeat = repeats[repeatIndex].bitmap;
+      const { repeat } = GLOBAL_STATE;
 
       for (let y = 0; y < repeat.height; y++) {
         for (let x = 0; x < repeat.width; x++) {
           let paletteIndex = repeat.pixel(x, y);
 
-          if (
-            lastDrawn[repeatIndex].bitmap == null ||
-            lastDrawn[repeatIndex].bitmap.pixel(x, y) != paletteIndex
-          ) {
+          if (lastDrawn == null || lastDrawn.pixel(x, y) != paletteIndex) {
             const symbol = symbolMap[paletteIndex];
 
             ctx.save();
@@ -119,83 +106,42 @@ export function drawRepeats() {
           }
         }
       }
-      lastDrawn[repeatIndex].bitmap = repeat;
-    }
-
-    function drawAll() {
-      lastDrawn = repeats.map((repeat) => {
-        return { bitmap: null, pos: [...repeat.pos] };
-      });
-      for (let repeatIndex = 0; repeatIndex < repeats.length; repeatIndex++) {
-        // positionRepeat(repeatIndex);
-        scaleAll(
-          repeatIndex,
-          repeats[repeatIndex].bitmap.width,
-          repeats[repeatIndex].bitmap.height
-        );
-
-        draw(repeatIndex);
-        drawGrid(repeatIndex);
-      }
+      lastDrawn = repeat;
     }
 
     return {
       syncState(state) {
-        repeats = state.repeats;
-
-        if (lastDrawn.length != repeats.length) {
-          // A repeat was added or removed
-          drawAll();
-        }
+        const { repeat } = state;
 
         if (symbolLineWidth != state.symbolLineWidth) {
           // We will want to redraw everything
           symbolLineWidth = state.symbolLineWidth;
-          clearLastDrawn(lastDrawn);
+          lastDrawn = null;
         }
 
         if (scale != state.scale) {
           // We will want to redraw everything
           scale = state.scale;
-          clearLastDrawn(lastDrawn);
+          lastDrawn = null;
 
           // And scale the canvases
-          for (
-            let repeatIndex = 0;
-            repeatIndex < repeats.length;
-            repeatIndex++
-          ) {
-            scaleAll(
-              repeatIndex,
-              repeats[repeatIndex].bitmap.width,
-              repeats[repeatIndex].bitmap.height
-            );
-            drawGrid(repeatIndex);
-          }
+          scaleCanvas(repeat.width, repeat.height);
+          drawGrid();
         }
 
-        for (let repeatIndex = 0; repeatIndex < repeats.length; repeatIndex++) {
-          let repeat = repeats[repeatIndex];
+        if (
+          lastDrawn == null ||
+          repeat.width != lastDrawn.width ||
+          repeat.height != lastDrawn.height
+        ) {
+          scaleCanvas(repeat.width, repeat.height);
 
-          if (
-            lastDrawn[repeatIndex].bitmap == null ||
-            repeat.bitmap.width != lastDrawn[repeatIndex].bitmap.width ||
-            repeat.bitmap.height != lastDrawn[repeatIndex].bitmap.height
-          ) {
-            scaleAll(
-              repeatIndex,
-              repeats[repeatIndex].bitmap.width,
-              repeats[repeatIndex].bitmap.height
-            );
+          drawGrid();
+          lastDrawn = null;
+        }
 
-            drawGrid(repeatIndex);
-
-            lastDrawn[repeatIndex].bitmap = null;
-          }
-
-          if (lastDrawn[repeatIndex].bitmap != repeat.bitmap) {
-            draw(repeatIndex);
-          }
+        if (lastDrawn != repeat) {
+          draw();
         }
       },
     };

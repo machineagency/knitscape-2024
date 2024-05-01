@@ -6,9 +6,9 @@ export const MIN_SIM_SCALE = 0.6;
 
 export const SNAPSHOT_INTERVAL = 1000;
 
-export const SNAPSHOT_FIELDS = ["yarnPalette", "yarnSequence", "repeats"];
+export const SNAPSHOT_FIELDS = ["yarnPalette", "yarnSequence", "repeat"];
 
-export const LAYERS = ["chart", "repeats", "yarn"];
+export const LAYERS = ["chart", "repeat", "yarn"];
 
 export const SYMBOL_PATHS = {
   knit: new Path2D(
@@ -40,5 +40,4 @@ export const toolData = {
   rect: { icon: "fa-solid fa-vector-square", hotkey: "r" },
   line: { icon: "fa-solid fa-minus", hotkey: "l" },
   shift: { icon: "fa-solid fa-right-left", hotkey: "s" },
-  move: { hotkey: "h" },
 };

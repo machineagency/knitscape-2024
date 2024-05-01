@@ -65,7 +65,7 @@ export function downloadPNG() {
 export function downloadBMP() {
   download(
     makeBMP(
-      GLOBAL_STATE.repeats[0].bitmap,
+      GLOBAL_STATE.repeat.bitmap,
       GLOBAL_STATE.yarnSequence.pixels,
       GLOBAL_STATE.yarnPalette
     ).src
@@ -75,7 +75,7 @@ export function downloadBMP() {
 export function downloadSilverKnitTxt() {
   const text =
     "SilverKnit\n" +
-    GLOBAL_STATE.repeats[0].bitmap
+    GLOBAL_STATE.repeat
       .make2d()
       .map((row) =>
         row
@@ -137,9 +137,7 @@ export function downloadJSON() {
       JSON.stringify({
         width: GLOBAL_STATE.chart.width,
         height: GLOBAL_STATE.chart.height,
-        repeats: GLOBAL_STATE.repeats.map(({ bitmap, pos, area }) => {
-          return { bitmap: bitmap.toJSON(), pos, area };
-        }),
+        repeat: GLOBAL_STATE.repeat.toJSON(),
         yarnPalette: GLOBAL_STATE.yarnPalette,
         yarnSequence: GLOBAL_STATE.yarnSequence.toJSON(),
       })

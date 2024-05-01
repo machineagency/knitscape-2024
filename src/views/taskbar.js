@@ -2,6 +2,7 @@ import { html } from "lit-html";
 import { GLOBAL_STATE, dispatch, undo } from "../state";
 import { toggleFullscreen } from "../actions/zoomFit";
 import { newPattern, uploadFile } from "../actions/importers";
+import { fitChart } from "../actions/zoomFit";
 
 function updateChartWidth(newWidth) {
   newWidth = newWidth > 500 ? 500 : newWidth;

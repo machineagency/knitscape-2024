@@ -3,21 +3,11 @@ import { posAtCoords } from "../utils";
 
 import { repeatEditingTools } from "../actions/repeatEditingTools";
 
-function getRepeatIndex(elem) {
-  elem = elem.parentNode;
-  while (elem) {
-    if (elem.hasAttribute("data-repeatindex"))
-      return Number(elem.dataset.repeatindex);
-    elem = elem.parentNode;
-  }
-  return null;
-}
-
-function editRepeat(repeatIndex, repeatCanvas, tool) {
+function editRepeat(repeatCanvas, tool) {
   // tool onMove is not called unless pointer moves into another cell in the chart
   let pos = GLOBAL_STATE.repeatPos;
 
-  let onMove = tool(repeatIndex, pos);
+  let onMove = tool(pos);
   if (!onMove) return;
 
   function move(moveEvent) {
@@ -42,8 +32,8 @@ function editRepeat(repeatIndex, repeatCanvas, tool) {
   repeatCanvas.addEventListener("pointerleave", end);
 }
 
-function resizeRepeat(e, repeatIndex) {
-  const startRepeat = GLOBAL_STATE.repeats[repeatIndex];
+function resizeRepeat(e) {
+  const { repeat: startRepeat } = GLOBAL_STATE;
   const startPos = [e.clientX, e.clientY];
   const resizeDragger = e.target;
 
@@ -61,43 +51,21 @@ function resizeRepeat(e, repeatIndex) {
 
   const onmove = (e) => {
     let newWidth =
-      startRepeat.bitmap.width -
+      startRepeat.width -
       Math.floor(
         (startPos[0] - e.clientX) / (GLOBAL_STATE.scale / devicePixelRatio)
       );
 
     let newHeight =
-      startRepeat.bitmap.height +
+      startRepeat.height +
       Math.floor(
         (startPos[1] - e.clientY) / (GLOBAL_STATE.scale / devicePixelRatio)
       );
 
-    // console.log(newHeight, new)
     if (newHeight < 1 || newWidth < 1) return;
 
-    let pos = [...startRepeat.pos];
-    if (newWidth + startRepeat.pos[0] < 1) pos[0] = -newWidth + 1;
-    if (newHeight + startRepeat.pos[1] < 1) pos[1] = -newHeight + 1;
-
-    let area = [
-      newWidth > startRepeat.area[0] ? newWidth : startRepeat.area[0],
-      newHeight > startRepeat.area[1] ? newHeight : startRepeat.area[1],
-    ];
-
     dispatch({
-      repeats: [
-        ...GLOBAL_STATE.repeats.slice(0, repeatIndex),
-        {
-          ...GLOBAL_STATE.repeats[repeatIndex],
-          bitmap: startRepeat.bitmap
-            .vFlip()
-            .resize(newWidth, newHeight)
-            .vFlip(),
-          pos,
-          area,
-        },
-        ...GLOBAL_STATE.repeats.slice(repeatIndex + 1),
-      ],
+      repeat: startRepeat.vFlip().resize(newWidth, newHeight).vFlip(),
     });
   };
 
@@ -220,37 +188,15 @@ function editRepeatArea(e, repeatIndex, direction) {
 
 export function repeatPointerInteraction(repeatContainer) {
   repeatContainer.addEventListener("pointerdown", (e) => {
-    const repeatIndex = getRepeatIndex(e.target);
     let classList = e.target.classList;
 
-    if (
-      GLOBAL_STATE.editingRepeat != repeatIndex &&
-      classList.contains("repeat-canvas")
-    ) {
-      // If we're not editing this repeat, begin editing it
-      console.log("NOW EDITING REPEAT", repeatIndex);
-      dispatch({ editingRepeat: repeatIndex });
-      return;
-    }
-
     if (classList.contains("resize-repeat")) {
-      // interacting with dragger
-      resizeRepeat(e, repeatIndex);
-    } else if (classList.contains("repeat-area-dragger")) {
-      // interacting with dragger
-      if (classList.contains("x-axis")) {
-        editRepeatArea(e, repeatIndex, "x");
-      } else {
-        editRepeatArea(e, repeatIndex, "y");
-      }
+      resizeRepeat(e);
     } else if (classList.contains("repeat-canvas")) {
       // interacting with canvas
       const activeTool = GLOBAL_STATE.activeTool;
-
       if (activeTool in repeatEditingTools) {
-        editRepeat(repeatIndex, e.target, repeatEditingTools[activeTool]);
-      } else if (activeTool == "move") {
-        moveRepeat(e, repeatIndex);
+        editRepeat(e.target, repeatEditingTools[activeTool]);
       } else {
         console.warn(`Uh oh, ${activeTool} is not a tool`);
       }
@@ -258,18 +204,10 @@ export function repeatPointerInteraction(repeatContainer) {
   });
 
   repeatContainer.addEventListener("pointermove", (e) => {
-    if (GLOBAL_STATE.editingRepeat < 0) {
-      const { x, y } = posAtCoords(e, repeatContainer);
+    const { x, y } = posAtCoords(e, e.target);
 
-      if (GLOBAL_STATE.pos.x != x || GLOBAL_STATE.pos.y != y) {
-        dispatch({ pos: { x, y } });
-      }
-    } else {
-      const { x, y } = posAtCoords(e, e.target);
-
-      if (GLOBAL_STATE.pos.x != x || GLOBAL_STATE.pos.y != y) {
-        dispatch({ repeatPos: { x, y } });
-      }
+    if (GLOBAL_STATE.pos.x != x || GLOBAL_STATE.pos.y != y) {
+      dispatch({ repeatPos: { x, y } });
     }
   });
 }

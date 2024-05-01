@@ -27,23 +27,16 @@ let GLOBAL_STATE = {
   yarnPalette: ["#1013bd", "#ebe9bb", "#f75500"], // Colors of the yarns
   yarnSequence: new Bimp(1, 8, [1, 1, 1, 1, 2, 2, 0, 0]),
 
-  editingRepeat: -1,
   repeatPos: [-1, -1],
 
-  repeats: [
-    {
-      bitmap: new Bimp(
-        4,
-        8,
-        [
-          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 3, 0,
-          0, 0, 3, 0, 0, 0, 3, 0, 0,
-        ]
-      ),
-      pos: [0, 0],
-      area: [48, 60],
-    },
-  ],
+  repeat: new Bimp(
+    4,
+    8,
+    [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 3, 0, 0, 0,
+      3, 0, 0, 0, 3, 0, 0,
+    ]
+  ),
 
   chart: Bimp.empty(48, 60, 0),
 

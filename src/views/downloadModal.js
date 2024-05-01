@@ -48,8 +48,7 @@ export function downloadModal() {
           @input=${(e) =>
             dispatch({
               punchVerticalRepeats: Number(e.target.value),
-              rows:
-                Number(e.target.value) * GLOBAL_STATE.repeats[0].bitmap.height,
+              rows: Number(e.target.value) * GLOBAL_STATE.repeat.height,
             })} />
       </label>
 
