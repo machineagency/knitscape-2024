@@ -8,8 +8,6 @@ export const SNAPSHOT_INTERVAL = 1000;
 
 export const SNAPSHOT_FIELDS = ["yarnPalette", "yarnSequence", "repeat"];
 
-export const LAYERS = ["chart", "repeat", "yarn"];
-
 export const SYMBOL_PATHS = {
   knit: new Path2D(
     "M 0 0.5 L 0.4 0.5 C 0.7 0.5 0.7 0.2 0.5 0.2 C 0.3 0.2 0.3 0.5 0.6 0.5 L 1 0.5"

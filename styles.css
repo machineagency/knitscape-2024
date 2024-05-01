@@ -208,41 +208,13 @@ REPEAT CANVAS UI
 }
 
 .resize-repeat {
-  cursor: move;
   bottom: 100%;
   left: 100%;
   position: absolute;
-  cursor: unset;
 }
 
 .resize-repeat > i {
   pointer-events: none;
-}
-
-/**********************************
-
-TOOL PICKER
-
-**********************************/
-
-.tool-picker {
-  top: 8px;
-  right: 8px;
-  position: absolute;
-  display: flex;
-  gap: 0.4em;
-  padding: 0.4em;
-  border-radius: 12px;
-  box-shadow: 0 0 4px 0 black;
-  background-color: var(--base1);
-  z-index: 10;
-  font-size: larger;
-  align-items: center;
-}
-
-.tool-picker .btn.current {
-  background-color: var(--accent);
-  color: var(--base2);
 }
 
 /**********************************
@@ -439,6 +411,11 @@ PAN-ZOOM CONTROLS
   width: 5em;
 }
 
+.panzoom-controls .btn.current {
+  background-color: var(--accent);
+  color: var(--base2);
+}
+
 /**********************************
 
 MODALS
@@ -500,6 +477,10 @@ RESIZE DRAGGER
   cursor: grabbing !important;
 }
 
-.grab {
-  cursor: grab !important;
+.grabber {
+  cursor: grab;
+}
+
+.grabbing .grabber {
+  cursor: grabbing;
 }

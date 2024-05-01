@@ -38,14 +38,12 @@ function resizeRepeat(e) {
   const resizeDragger = e.target;
 
   document.body.classList.add("grabbing");
-  resizeDragger.classList.remove("grab");
 
   const end = () => {
     window.removeEventListener("pointermove", onmove);
     window.removeEventListener("pointerup", end);
 
     document.body.classList.remove("grabbing");
-    resizeDragger.classList.add("grab");
   };
 
   const onmove = (e) => {
@@ -74,6 +72,9 @@ function resizeRepeat(e) {
 
 export function repeatPointerInteraction(repeatContainer) {
   repeatContainer.addEventListener("pointerdown", (e) => {
+    // Ignore middle mouse button
+    if (e.which == 2 || e.button == 4) return;
+
     let classList = e.target.classList;
 
     if (classList.contains("resize-repeat")) {

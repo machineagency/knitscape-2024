@@ -30,7 +30,13 @@ function pan(e) {
 
 export function desktopPointerPanZoom(desktop) {
   desktop.addEventListener("pointerdown", (e) => {
-    if (e.target == desktop || e.target.id == "symbol-canvas") {
+    if (
+      e.target == desktop ||
+      e.target.id == "symbol-canvas" ||
+      e.which == 2 ||
+      e.button == 4
+    ) {
+      // Pan if dragging background or if middle mouse button is pressed
       pan(e);
     }
   });
@@ -48,23 +54,17 @@ export function desktopPointerPanZoom(desktop) {
 
   desktop.addEventListener("wheel", (e) => {
     const bounds = desktop.getBoundingClientRect();
-    let scale;
+    const { reverseScroll, scale } = GLOBAL_STATE;
+    const dir = Math.sign(e.deltaY) < 0;
 
-    if (Math.sign(e.deltaY) < 0) {
-      scale = GLOBAL_STATE.reverseScroll
-        ? GLOBAL_STATE.scale - 1
-        : GLOBAL_STATE.scale + 1;
-    } else {
-      scale = GLOBAL_STATE.reverseScroll
-        ? GLOBAL_STATE.scale + 1
-        : GLOBAL_STATE.scale - 1;
-    }
+    const newScale = reverseScroll == dir ? scale - 1 : scale + 1;
+
     zoomAtPoint(
       {
         x: e.clientX - bounds.left,
         y: e.clientY - bounds.top,
       },
-      scale
+      newScale
     );
   });
 }

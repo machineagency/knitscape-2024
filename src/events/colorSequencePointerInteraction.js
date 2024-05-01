@@ -41,14 +41,12 @@ function resizeColorCanvas(e) {
   const start = e.clientY;
 
   document.body.classList.add("grabbing");
-  e.target.classList.remove("grab");
 
   function end() {
     window.removeEventListener("pointermove", move);
     window.removeEventListener("pointerup", end);
 
     document.body.classList.remove("grabbing");
-    e.target.classList.add("grab");
   }
 
   function move(e) {
@@ -69,10 +67,16 @@ function resizeColorCanvas(e) {
 
 export function colorSequencePointerInteraction(colorCanvas, resizeDragger) {
   colorCanvas.addEventListener("pointerdown", (e) => {
+    // Ignore middle mouse button
+    if (e.which == 2 || e.button == 4) return;
+
     brushColor(e, colorCanvas);
   });
 
   resizeDragger.addEventListener("pointerdown", (e) => {
+    // Ignore middle mouse button
+    if (e.which == 2 || e.button == 4) return;
+
     resizeColorCanvas(e);
   });
 }
