@@ -32,6 +32,21 @@ function pan(e) {
   window.addEventListener("pointerleave", end);
 }
 
+function zoom(e) {
+  const bounds = desktop.getBoundingClientRect();
+  const { reverseScroll, scale } = GLOBAL_STATE;
+  const dir = Math.sign(e.deltaY) < 0;
+  const newScale = reverseScroll == dir ? scale * 0.9 : scale * 1.1;
+
+  zoomAtPoint(
+    {
+      x: e.clientX - bounds.left,
+      y: e.clientY - bounds.top,
+    },
+    newScale
+  );
+}
+
 export function desktopPointerPanZoom(desktop) {
   desktop.addEventListener("pointerdown", (e) => {
     if (
@@ -45,19 +60,5 @@ export function desktopPointerPanZoom(desktop) {
     }
   });
 
-  desktop.addEventListener("wheel", (e) => {
-    const bounds = desktop.getBoundingClientRect();
-    const { reverseScroll, scale } = GLOBAL_STATE;
-    const dir = Math.sign(e.deltaY) < 0;
-
-    const newScale = reverseScroll == dir ? scale - 1 : scale + 1;
-
-    zoomAtPoint(
-      {
-        x: e.clientX - bounds.left,
-        y: e.clientY - bounds.top,
-      },
-      newScale
-    );
-  });
+  desktop.addEventListener("wheel", (e) => zoom(e));
 }

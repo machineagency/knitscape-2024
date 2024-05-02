@@ -19,13 +19,14 @@ import { colorSequencePointerInteraction } from "./events/colorSequencePointerIn
 import { simulationPointerInteraction } from "./events/simulationPointerInteraction";
 
 // Touch interaction
-import { desktopTouchPanZoom } from "./events/desktopTouchPanZoom";
-import { colorSequenceTouchInteraction } from "./events/colorSequenceTouchInteraction";
-import { simulationTouchInteraction } from "./events/simulationTouchInteraction";
+// import { desktopTouchPanZoom } from "./events/desktopTouchPanZoom";
+// import { colorSequenceTouchInteraction } from "./events/colorSequenceTouchInteraction";
+// import { simulationTouchInteraction } from "./events/simulationTouchInteraction";
 
 import { runSimulation } from "./components/runSimulation";
 import { generateChart } from "./components/generateChart";
-import { isMobile } from "./utils";
+
+// import { isMobile } from "./utils";
 
 let desktop, yarnSequenceEditorCanvas, colorDragger, simContainer;
 
@@ -34,21 +35,21 @@ function r() {
   window.requestAnimationFrame(r);
 }
 
-function initKeyboard() {
-  addKeypressListeners();
+// function initKeyboard() {
+//   addKeypressListeners();
 
-  desktopPointerPanZoom(desktop);
-  colorSequencePointerInteraction(yarnSequenceEditorCanvas, colorDragger);
-  simulationPointerInteraction(simContainer);
-}
+//   desktopPointerPanZoom(desktop);
+//   colorSequencePointerInteraction(yarnSequenceEditorCanvas, colorDragger);
+//   simulationPointerInteraction(simContainer);
+// }
 
-function initTouch() {
-  document.body.style.setProperty("--font-size", "1.1rem");
+// function initTouch() {
+//   document.body.style.setProperty("--font-size", "1.1rem");
 
-  desktopTouchPanZoom(desktop);
-  colorSequenceTouchInteraction(yarnSequenceEditorCanvas, colorDragger);
-  simulationTouchInteraction(simContainer);
-}
+//   desktopTouchPanZoom(desktop);
+//   colorSequenceTouchInteraction(yarnSequenceEditorCanvas, colorDragger);
+//   simulationTouchInteraction(simContainer);
+// }
 
 function init() {
   r();
@@ -64,15 +65,21 @@ function init() {
     gutterSize: 11,
   });
 
-  isMobile() ? initTouch() : initKeyboard();
+  // isMobile() ? initTouch() : initKeyboard();
+
+  addKeypressListeners();
+  desktopPointerPanZoom(desktop);
+  colorSequencePointerInteraction(yarnSequenceEditorCanvas, colorDragger);
+  simulationPointerInteraction(simContainer);
 
   StateMonitor.register([
     yarnSequenceCanvas({
       canvas: yarnSequenceEditorCanvas,
     }),
-    runSimulation(),
+
     generateChart(),
     drawChartOnChange(),
+    runSimulation(),
   ]);
 
   fitChart();

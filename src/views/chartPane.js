@@ -123,11 +123,11 @@ export function chartPane() {
           id="chart-canvas"
           @pointerdown=${chartPointer}
           @pointermove=${trackPointer}></canvas>
-        <div
+        <!-- <div
           class="grid overlay"
           style="--cell-width: ${repeatWidth}px;
            --cell-height: ${repeatHeight}px;
-           --offset-y: ${scale * (chart.height % repeat.height)}px;"></div>
+           --offset-y: ${scale * (chart.height % repeat.height)}px;"></div> -->
         <div
           class="overlay repeat-ui"
           style="width: ${repeatWidth}px; height: ${repeatHeight}px;">

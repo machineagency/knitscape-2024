@@ -25,7 +25,6 @@ function symbolPicker() {
             stroke-width="0.04"
             d="${SYMBOL_PATHS[symbolName]}" />
         </svg>
-        <!-- <canvas class="symbol-preview" data-symbol=${symbolName}></canvas> -->
       </button>`
     )}
   </div>`;
