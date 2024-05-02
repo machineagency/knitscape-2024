@@ -52,7 +52,7 @@ function resizeColorCanvas(e) {
   function move(e) {
     let newSize =
       startSequence.height +
-      Math.floor(((start - e.clientY) / GLOBAL_STATE.scale) * devicePixelRatio);
+      Math.floor((start - e.clientY) / GLOBAL_STATE.scale);
 
     if (newSize < 1 || newSize == GLOBAL_STATE.yarnSequence.height) return;
 

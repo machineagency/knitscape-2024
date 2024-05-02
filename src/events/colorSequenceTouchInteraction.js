@@ -49,9 +49,7 @@ function resizeColorCanvas(e) {
   const onmove = (e) => {
     let newSize =
       startSequence.height +
-      Math.floor(
-        ((start - e.touches[0].clientY) / GLOBAL_STATE.scale) * devicePixelRatio
-      );
+      Math.floor((start - e.touches[0].clientY) / GLOBAL_STATE.scale);
     if (newSize < 1 || newSize == startSequence.height) return;
 
     dispatch({

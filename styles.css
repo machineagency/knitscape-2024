@@ -6,11 +6,9 @@
 }
 
 body {
-  --font-size: 1rem;
+  --font-size: 0.8rem;
   width: 100vw;
-  width: calc(var(--vw, 1vw) * 100);
   height: 100vh;
-  height: calc(var(--vh, 1vh) * 100);
 
   font-size: var(--font-size);
 
@@ -45,29 +43,24 @@ TASKBAR
   justify-content: space-between;
   align-items: center;
   padding: 0.3em;
-  z-index: 5;
-  cursor: default;
-}
-
-#taskbar button {
-  cursor: pointer;
+  user-select: none;
 }
 
 #chart-size-controls {
   display: flex;
   align-items: center;
   gap: 0.4em;
-  font-size: 1em;
 }
 
 .site-title {
-  font-size: 1.2em;
+  font-weight: 600;
   margin-left: 0.3em;
   cursor: default;
 }
 
 .taskbar-buttons > button {
   color: var(--text-inactive);
+  cursor: pointer;
 }
 
 .taskbar-buttons button.open {
@@ -147,13 +140,6 @@ EDIT PANE
   overflow: hidden;
 }
 
-#desktop-container {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-  box-shadow: inset 0 0 6px 0px rgba(0, 0, 0, 0.5);
-}
-
 #desktop {
   position: relative;
   box-shadow: inset 0 0 6px 0px rgba(0, 0, 0, 0.5);
@@ -163,58 +149,26 @@ EDIT PANE
   align-items: flex-start;
 }
 
-#canvas-transform-group {
-  display: block;
-  outline: 1px solid black;
+#chart-canvas {
+  border: 1px solid black;
 }
 
-#symbol-canvas {
-  position: relative;
-}
-
-.grid-canvas,
-#yarn-color-canvas {
+.overlay {
+  position: absolute;
   pointer-events: none;
-  position: absolute;
   left: 0;
-  top: 0;
-}
-
-/**********************************
-
-REPEAT CANVAS UI
-
-**********************************/
-#repeat-container {
-  position: absolute;
   bottom: 0;
-  left: 0;
-  z-index: 1;
+  height: 100%;
+  width: 100%;
 }
 
-.repeat-canvas {
-  position: relative;
-  display: block;
-  outline: 1px solid black;
+.repeat-ui {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: 1px solid white;
   outline-offset: -1px;
-  z-index: 1;
-}
-
-#repeat-grid {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  pointer-events: none;
-}
-
-.resize-repeat {
-  bottom: 100%;
-  left: 100%;
-  position: absolute;
-}
-
-.resize-repeat > i {
-  pointer-events: none;
+  border: 1px solid black;
 }
 
 /**********************************
@@ -229,7 +183,6 @@ YARN SEQUENCE
   bottom: 0;
   display: flex;
   flex-direction: column;
-  z-index: 100;
 }
 
 #yarn-sequence > button {
@@ -469,7 +422,7 @@ SPLIT JS STYLES
 
 /**********************************
 
-RESIZE DRAGGER
+UTILITIES
 
 **********************************/
 
@@ -479,8 +432,70 @@ RESIZE DRAGGER
 
 .grabber {
   cursor: grab;
+  pointer-events: all;
 }
 
 .grabbing .grabber {
   cursor: grabbing;
+}
+
+.grid {
+  --cell-width: 10px;
+  --cell-height: 10px;
+  --offset-x: 0px;
+  --offset-y: 0px;
+  --line-width: 1px;
+  --line-offset: calc(var(--line-width) / -2);
+
+  --vertical: repeating-linear-gradient(
+    to right,
+    black 0 var(--line-width),
+    transparent var(--line-width) var(--cell-width)
+  );
+
+  --horizontal: repeating-linear-gradient(
+    to bottom,
+    black 0 var(--line-width),
+    transparent var(--line-width) var(--cell-height)
+  );
+
+  background-position: calc(var(--line-offset) + var(--offset-x))
+    calc(var(--line-offset) + var(--offset-y));
+  background-image: var(--vertical), var(--horizontal);
+}
+
+.dragger {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid black;
+  justify-content: center;
+  padding: 0;
+}
+
+.dragger.up {
+  bottom: 100%;
+  width: 2em;
+  border-radius: 8px 8px 0 0;
+  padding: 1px 0 0 0;
+}
+
+.dragger.down {
+  top: 100%;
+  width: 2em;
+  padding: 0 0 2px 0;
+}
+
+.dragger.left {
+  right: 100%;
+  border-radius: 8px 0 0 8px;
+  height: 2em;
+  padding: 0 2px 0 3px;
+}
+
+.dragger.right {
+  left: 100%;
+  border-radius: 0 8px 8px 0;
+  height: 2em;
+  padding: 0 3px 0 2px;
 }

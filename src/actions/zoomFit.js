@@ -1,5 +1,4 @@
 import { GLOBAL_STATE, dispatch } from "../state";
-import { devicePixelBoundingBox } from "../utils";
 import {
   MIN_SCALE,
   MAX_SCALE,
@@ -75,16 +74,16 @@ export function zoomAtPoint(pt, scale) {
   dispatch({
     scale,
     chartPan: {
-      x: pt.x - start.x * scale,
-      y: pt.y - start.y * scale,
+      x: Math.floor(pt.x - start.x * scale),
+      y: Math.floor(pt.y - start.y * scale),
     },
   });
 }
 
 export function fitChart() {
-  const { width, height } = devicePixelBoundingBox(
-    document.getElementById("desktop")
-  );
+  const { width, height } = document
+    .getElementById("desktop")
+    .getBoundingClientRect();
 
   const scale = Math.floor(
     0.9 *
@@ -97,8 +96,8 @@ export function fitChart() {
   dispatch({
     scale,
     chartPan: {
-      x: (width - scale * GLOBAL_STATE.chart.width) / 2 / devicePixelRatio,
-      y: (height - scale * GLOBAL_STATE.chart.height) / 2 / devicePixelRatio,
+      x: Math.floor((width - scale * GLOBAL_STATE.chart.width) / 2),
+      y: Math.floor((height - scale * GLOBAL_STATE.chart.height) / 2),
     },
   });
 }
@@ -106,11 +105,6 @@ export function fitChart() {
 export function sizeCanvasToBitmap(canvas, bitmapWidth, bitmapHeight) {
   canvas.width = GLOBAL_STATE.scale * bitmapWidth;
   canvas.height = GLOBAL_STATE.scale * bitmapHeight;
-  canvas.style.width = `${
-    (GLOBAL_STATE.scale * bitmapWidth) / devicePixelRatio
-  }px`;
-
-  canvas.style.height = `${
-    (GLOBAL_STATE.scale * bitmapHeight) / devicePixelRatio
-  }px`;
+  canvas.style.width = `${GLOBAL_STATE.scale * bitmapWidth}px`;
+  canvas.style.height = `${GLOBAL_STATE.scale * bitmapHeight}px`;
 }

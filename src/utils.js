@@ -9,36 +9,25 @@ export function generateChart(repeats) {
   return chart;
 }
 
-export function devicePixelBoundingBox(el) {
-  const bbox = el.getBoundingClientRect();
-
-  return {
-    width: bbox.width * devicePixelRatio,
-    height: bbox.height * devicePixelRatio,
-  };
-}
-
 export function colorSequencePosAtCoords(event, target) {
   const bounds = target.getBoundingClientRect();
+  const x = Math.floor((event.clientX - bounds.x) / GLOBAL_STATE.scale);
+  const y = Math.floor((event.clientY - bounds.y) / GLOBAL_STATE.scale);
 
-  const x = Math.floor(
-    ((event.clientX - bounds.x) / GLOBAL_STATE.scale) * devicePixelRatio
-  );
-  const y = Math.floor(
-    ((event.clientY - bounds.y) / GLOBAL_STATE.scale) * devicePixelRatio
-  );
   return { x, y: GLOBAL_STATE.yarnSequence.height - y - 1 };
 }
 
 export function posAtCoords(event, target) {
   const bounds = target.getBoundingClientRect();
 
-  const x = Math.floor(
-    ((event.clientX - bounds.x) / GLOBAL_STATE.scale) * devicePixelRatio
-  );
-  const y = Math.floor(
-    ((event.clientY - bounds.y) / GLOBAL_STATE.scale) * devicePixelRatio
-  );
+  let x = Math.floor((event.clientX - bounds.x) / GLOBAL_STATE.scale);
+  let y =
+    GLOBAL_STATE.chart.height -
+    Math.floor((event.clientY - bounds.y) / GLOBAL_STATE.scale) -
+    1;
+  x = x < 0 ? 0 : x;
+  y = y < 0 ? 0 : y;
+
   return { x, y };
 }
 

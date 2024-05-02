@@ -55,13 +55,6 @@ export function downloadPunchcard() {
   );
 }
 
-export function downloadPNG() {
-  download(
-    document.getElementById("preview").toDataURL("image/png"),
-    "chart.png"
-  );
-}
-
 export function downloadBMP() {
   download(
     makeBMP(

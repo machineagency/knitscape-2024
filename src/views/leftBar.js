@@ -2,7 +2,10 @@ import { html } from "lit-html";
 import { GLOBAL_STATE, dispatch } from "../state";
 import { shuffleArray } from "../utils";
 import { Bimp } from "../lib/Bimp";
+import { SYMBOL_PATHS } from "../constants";
 import randomColor from "randomcolor";
+
+let editingPalette = false;
 
 function symbolPicker() {
   return html` <div id="symbol-picker">
@@ -14,7 +17,15 @@ function symbolPicker() {
           : ""}"
         @click=${() => dispatch({ activeSymbol: index })}>
         <div>${symbolName}</div>
-        <canvas class="symbol-preview" data-symbol=${symbolName}></canvas>
+        <svg viewBox="0 0 1 1" class="symbol-preview">
+          <rect fill="white" width="100%" height="100%"></rect>
+          <path
+            fill="none"
+            stroke="black"
+            stroke-width="0.04"
+            d="${SYMBOL_PATHS[symbolName]}" />
+        </svg>
+        <!-- <canvas class="symbol-preview" data-symbol=${symbolName}></canvas> -->
       </button>`
     )}
   </div>`;
@@ -52,14 +63,14 @@ function editYarn(e, index) {
 }
 
 function yarnPicker() {
-  const { yarnPalette, editingPalette, activeYarn } = GLOBAL_STATE;
+  const { yarnPalette, activeYarn } = GLOBAL_STATE;
 
   return html`<div id="yarn-picker">
     <h3>Yarns</h3>
     <div>
       <button
         class="btn icon ${editingPalette ? "selected" : ""}"
-        @click=${() => dispatch({ editingPalette: !editingPalette })}>
+        @click=${() => (editingPalette = !editingPalette)}>
         <i class="fa-solid fa-pen"></i>
       </button>
       <button

@@ -1,7 +1,7 @@
 import { Bimp } from "../lib/Bimp";
 import { GLOBAL_STATE, dispatch } from "../state";
 import { fitChart } from "./zoomFit";
-import { getRandomColor } from "../utils";
+import randomColor from "randomcolor";
 
 function loadJSON(patternJSON) {
   let { yarnSequence, yarnPalette, repeat, width, height } = patternJSON;
@@ -21,7 +21,7 @@ function loadJSON(patternJSON) {
 export function newPattern() {
   dispatch({
     yarnSequence: new Bimp(1, 4, [0, 0, 1, 1]),
-    yarnPalette: [getRandomColor(), getRandomColor()],
+    yarnPalette: [randomColor(), randomColor()],
     chart: Bimp.empty(30, 40, 0),
     repeat: new Bimp(4, 4, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
   });

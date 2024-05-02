@@ -27,8 +27,6 @@ const LINK_STRENGTH = 0.2;
 // The target link distance when the simulation is run
 const HEIGHT_SHRINK = 0.7;
 
-const dpi = devicePixelRatio;
-
 export function simulate(pattern, yarnSequence, palette, scale) {
   let relaxed = false;
   let yarnWidth, stitchHeight, sim;
@@ -251,8 +249,8 @@ export function simulate(pattern, yarnSequence, palette, scale) {
 
   const width = bbox.width * scale;
   const height = bbox.height * scale;
-  const canvasWidth = dpi * width;
-  const canvasHeight = dpi * height;
+  const canvasWidth = width;
+  const canvasHeight = height;
 
   function getCanvases(canvasIDs) {
     return canvasIDs.map((canvasID) => {

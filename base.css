@@ -289,6 +289,10 @@ button.btn {
   padding: 0;
 }
 
+button.btn i {
+  pointer-events: none;
+}
+
 a.btn,
 button.btn {
   display: inline-flex;

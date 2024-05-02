@@ -26,7 +26,7 @@ function updateChartHeight(newHeight) {
 export function taskbar() {
   const { chart, activeModal } = GLOBAL_STATE;
   return html`<div id="taskbar">
-    <h1 class="site-title">swatchscape</h1>
+    <div class="site-title">swatchscape</div>
     <div id="chart-size-controls">
       <label>Width</label>
       <input
@@ -46,17 +46,17 @@ export function taskbar() {
         max="1000" />
     </div>
     <div class="taskbar-buttons">
-      <button class="btn icon" @click=${() => undo()}>
+      <button class="btn" @click=${() => undo()}>
         <i class="fa-solid fa-rotate-left"></i>
       </button>
-      <button class="btn icon" @click=${() => newPattern()}>
+      <button class="btn" @click=${() => newPattern()}>
         <i class="fa-solid fa-file"></i>
       </button>
-      <button class="btn icon" @click=${() => uploadFile()}>
+      <button class="btn" @click=${() => uploadFile()}>
         <i class="fa-solid fa-upload"></i>
       </button>
       <button
-        class="btn icon ${activeModal == "download" ? "open" : ""}"
+        class="btn ${activeModal == "download" ? "open" : ""}"
         @click=${() =>
           dispatch({
             activeModal: activeModal == "download" ? null : "download",
@@ -64,7 +64,7 @@ export function taskbar() {
         <i class="fa-solid fa-download"></i>
       </button>
       <button
-        class="btn icon ${activeModal == "library" ? "open" : ""}"
+        class="btn ${activeModal == "library" ? "open" : ""}"
         @click=${() =>
           dispatch({
             activeModal: activeModal == "library" ? null : "library",
@@ -72,7 +72,7 @@ export function taskbar() {
         <i class="fa-solid fa-book"></i>
       </button>
       <button
-        class="btn icon ${activeModal == "settings" ? "open" : ""}"
+        class="btn ${activeModal == "settings" ? "open" : ""}"
         @click=${() =>
           dispatch({
             activeModal: activeModal == "settings" ? null : "settings",
@@ -80,13 +80,13 @@ export function taskbar() {
         <i class="fa-solid fa-gear"></i>
       </button>
       <button
-        class="btn icon"
+        class="btn"
         @click=${() =>
           window.open("https://github.com/machineagency/swatchscape")}>
         <i class="fa-brands fa-github"></i>
       </button>
 
-      <button class="btn icon" @click=${() => toggleFullscreen()}>
+      <button class="btn" @click=${() => toggleFullscreen()}>
         <i
           class="fa-solid fa-${!window.document.fullscreenElement &&
           !window.document.mozFullScreenElement &&

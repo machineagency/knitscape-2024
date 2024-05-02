@@ -1,23 +1,20 @@
 import { Bimp } from "./lib/Bimp";
-import {
-  SNAPSHOT_INTERVAL,
-  DEFAULT_PATTERN_LIBRARY,
-  DEFAULT_SYMBOLS,
-  SNAPSHOT_FIELDS,
-} from "./constants";
+import { DEFAULT_PATTERN_LIBRARY, DEFAULT_SYMBOLS } from "./constants";
+
+const SNAPSHOT_DEPTH = 50;
+const SNAPSHOT_INTERVAL = 1000;
+const SNAPSHOT_FIELDS = ["yarnPalette", "yarnSequence", "repeat"];
 
 let GLOBAL_STATE = {
-  editingPalette: false,
-
   activeTool: "brush",
   activeSymbol: 0,
-
-  symbolPalette: {},
   symbolMap: DEFAULT_SYMBOLS,
+
   patternLibrary: DEFAULT_PATTERN_LIBRARY,
 
   scale: 15, // Number of pixels for each chart cell
   pos: { x: -1, y: -1 }, // Mouse position in chart
+  repeatPos: [-1, -1], // Mouse position in repeat
   chartPan: { x: 0, y: 0 }, // Pan value for the chart editor view
 
   simScale: 1,
@@ -26,8 +23,6 @@ let GLOBAL_STATE = {
   activeYarn: 0,
   yarnPalette: ["#1013bd", "#ebe9bb", "#f75500"], // Colors of the yarns
   yarnSequence: new Bimp(1, 8, [1, 1, 1, 1, 2, 2, 0, 0]),
-
-  repeatPos: [-1, -1],
 
   repeat: new Bimp(
     4,
@@ -41,8 +36,6 @@ let GLOBAL_STATE = {
   chart: Bimp.empty(48, 60, 0),
 
   reverseScroll: false,
-  grid: true,
-  symbolLineWidth: 3,
   flipped: false,
 
   // PUNCH CARD
@@ -83,7 +76,7 @@ function snapshotUpdate(action) {
       Object.fromEntries(
         SNAPSHOT_FIELDS.map((field) => [field, GLOBAL_STATE[field]])
       ),
-      ...GLOBAL_STATE.snapshots,
+      ...GLOBAL_STATE.snapshots.slice(0, SNAPSHOT_DEPTH),
     ],
     lastSnapshot: Date.now(),
   };

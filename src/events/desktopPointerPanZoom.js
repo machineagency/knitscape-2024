@@ -1,5 +1,4 @@
 import { GLOBAL_STATE, dispatch } from "../state";
-import { posAtCoords } from "../utils";
 import { zoomAtPoint } from "../actions/zoomFit";
 
 function pan(e) {
@@ -13,7 +12,12 @@ function pan(e) {
       const dx = startPos.x - e.clientX;
       const dy = startPos.y - e.clientY;
 
-      dispatch({ chartPan: { x: startPan.x - dx, y: startPan.y - dy } });
+      dispatch({
+        chartPan: {
+          x: Math.floor(startPan.x - dx),
+          y: Math.floor(startPan.y - dy),
+        },
+      });
     }
   }
 
@@ -39,17 +43,6 @@ export function desktopPointerPanZoom(desktop) {
       // Pan if dragging background or if middle mouse button is pressed
       pan(e);
     }
-  });
-
-  desktop.addEventListener("pointermove", (e) => {
-    const { x, y } = posAtCoords(e, desktop);
-    if (GLOBAL_STATE.pos.x != x || GLOBAL_STATE.pos.y != y) {
-      dispatch({ pos: { x, y } });
-    }
-  });
-
-  desktop.addEventListener("pointerleave", (e) => {
-    dispatch({ pos: { x: -1, y: -1 } });
   });
 
   desktop.addEventListener("wheel", (e) => {
