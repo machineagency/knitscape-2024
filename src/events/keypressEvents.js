@@ -1,5 +1,5 @@
 import { GLOBAL_STATE, dispatch, undo } from "../state";
-import { toolData } from "../constants";
+import { toolData, stitches } from "../constants";
 
 const ctrlShortcuts = {
   a: () => console.log("select all?"),
@@ -24,7 +24,7 @@ const hotkeys = {
 };
 
 function symbolSwitch(index) {
-  if (index <= GLOBAL_STATE.symbolMap.length) dispatch({ activeSymbol: index });
+  if (index <= stitches.length) dispatch({ activeOp: index });
 }
 
 export function addKeypressListeners() {

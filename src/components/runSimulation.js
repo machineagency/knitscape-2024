@@ -1,7 +1,5 @@
-import { simulate } from "../simulation/yarnSimulation";
-import { GLOBAL_STATE } from "../state";
-
-let stopSim, relax;
+import { visualizeYarn } from "../simulation/newSim/yarnVisualization";
+import { Swatch } from "../simulation/newSim/Swatch";
 
 function debounce(callback, wait) {
   let timeoutId = null;
@@ -13,32 +11,24 @@ function debounce(callback, wait) {
   };
 }
 
-export function stopSimulation() {
-  if (stopSim) stopSim();
+function generateYarnView(state) {
+  if (state.stopSim) state.stopSim();
+
+  let { stopSim, relax, draw } = visualizeYarn(
+    new Swatch(state.chart, state.yarnSequence.pixels, state.rowMap),
+    state.yarnPalette
+  );
+
+  state.stopSim = stopSim;
+  state.simDraw = draw;
+  state.relax = relax;
 }
+
+const debouncedYarnView = debounce(generateYarnView, 30);
 
 export function runSimulation() {
   return ({ state }) => {
-    let queueSim = false;
-
-    function run() {
-      queueSim = false;
-
-      if (stopSim) stopSim();
-
-      ({ stopSim, relax } = simulate(
-        GLOBAL_STATE.chart,
-        GLOBAL_STATE.yarnSequence.pixels,
-        GLOBAL_STATE.yarnPalette,
-        GLOBAL_STATE.simScale
-      ));
-
-      GLOBAL_STATE.relax = relax;
-    }
-
-    const debouncedRun = debounce(run, 30);
-
-    run();
+    generateYarnView(state);
 
     return {
       syncState(state, changes) {
@@ -47,11 +37,7 @@ export function runSimulation() {
         );
 
         if (found) {
-          debouncedRun();
-        }
-
-        if (changes.includes("simScale")) {
-          run();
+          debouncedYarnView(state);
         }
       },
     };

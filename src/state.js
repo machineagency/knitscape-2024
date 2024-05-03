@@ -1,5 +1,4 @@
 import { Bimp } from "./lib/Bimp";
-import { DEFAULT_PATTERN_LIBRARY, DEFAULT_SYMBOLS } from "./constants";
 
 const SNAPSHOT_DEPTH = 50;
 const SNAPSHOT_INTERVAL = 1000;
@@ -7,10 +6,7 @@ const SNAPSHOT_FIELDS = ["yarnPalette", "yarnSequence", "repeat"];
 
 let GLOBAL_STATE = {
   activeTool: "brush",
-  activeSymbol: 0,
-  symbolMap: DEFAULT_SYMBOLS,
-
-  patternLibrary: DEFAULT_PATTERN_LIBRARY,
+  activeOp: "KNIT",
 
   scale: 15, // Number of pixels for each chart cell
   pos: { x: -1, y: -1 }, // Mouse position in chart
@@ -27,9 +23,10 @@ let GLOBAL_STATE = {
   repeat: new Bimp(
     4,
     8,
+
     [
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 3, 0, 0, 0,
-      3, 0, 0, 0, 3, 0, 0,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 5, 1, 1, 1, 5, 1, 1, 1,
+      5, 1, 1, 1, 5, 1, 1,
     ]
   ),
 

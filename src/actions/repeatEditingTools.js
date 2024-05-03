@@ -1,11 +1,12 @@
 import { GLOBAL_STATE, dispatch } from "../state";
+import { stitches } from "../constants";
 
 function brush(startPos) {
   function onMove(newPos) {
     const updated = GLOBAL_STATE.repeat.line(
       { x: startPos.x, y: startPos.y },
       { x: newPos.x, y: newPos.y },
-      GLOBAL_STATE.activeSymbol
+      stitches[GLOBAL_STATE.activeOp].id
     );
 
     startPos = newPos;
@@ -19,7 +20,10 @@ function brush(startPos) {
 function flood(startPos) {
   function onMove(newPos) {
     dispatch({
-      repeat: GLOBAL_STATE.repeat.flood(newPos, GLOBAL_STATE.activeSymbol),
+      repeat: GLOBAL_STATE.repeat.flood(
+        newPos,
+        stitches[GLOBAL_STATE.activeOp].id
+      ),
     });
   }
 
@@ -33,7 +37,7 @@ function rect(startPos) {
     const updated = startBitmap.rect(
       { x: startPos.x, y: startPos.y },
       { x: newPos.x, y: newPos.y },
-      GLOBAL_STATE.activeSymbol
+      stitches[GLOBAL_STATE.activeOp].id
     );
     dispatch({ repeat: updated });
   }
@@ -47,7 +51,7 @@ function line(startPos) {
     const updated = startBitmap.line(
       { x: startPos.x, y: startPos.y },
       { x: newPos.x, y: newPos.y },
-      GLOBAL_STATE.activeSymbol
+      stitches[GLOBAL_STATE.activeOp].id
     );
 
     dispatch({ repeat: updated });

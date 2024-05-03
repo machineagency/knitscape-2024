@@ -1,11 +1,5 @@
-import { SYMBOL_PATHS, STITCH_MAP, BACK_OPS, SYMBOL_BITS } from "../constants";
+import { stitches, STITCH_MAP } from "../constants";
 import { throttle } from "../utils";
-
-const path2d = Object.fromEntries(
-  Object.entries(SYMBOL_PATHS).map(([opName, pathData]) => {
-    return [opName, new Path2D(pathData)];
-  })
-);
 
 const DIM = "#0000002a";
 
@@ -45,7 +39,7 @@ function drawChart(
 
       if (lastDrawn == null || lastDrawn.pixel(x, y) != stitchIndex) {
         const operation = STITCH_MAP[stitchIndex];
-        const invert = SYMBOL_BITS[operation];
+        const invert = stitches[operation].punch;
         let fill, stroke;
 
         if (x < repeat.width && y < repeat.height) {
@@ -57,7 +51,7 @@ function drawChart(
           stroke = invert ? yarnPalette[yarnIndex] : "#000";
         }
 
-        const dimmed = BACK_OPS.has(operation);
+        const dimmed = stitches[operation].backBed;
 
         drawChartCell(
           ctx,
@@ -65,7 +59,7 @@ function drawChart(
           height - y - 1,
           fill,
           stroke,
-          path2d[operation],
+          stitches[operation].path2d,
           dimmed
         );
       }

@@ -2,28 +2,28 @@ import { html } from "lit-html";
 import { GLOBAL_STATE, dispatch } from "../state";
 import { shuffleArray } from "../utils";
 import { Bimp } from "../lib/Bimp";
-import { SYMBOL_PATHS } from "../constants";
+import { stitches } from "../constants";
 import randomColor from "randomcolor";
 
 let editingPalette = false;
 
-function symbolPicker() {
+function operationPicker() {
   return html` <div id="symbol-picker">
     <h3>Symbols</h3>
-    ${GLOBAL_STATE.symbolMap.map(
-      (symbolName, index) => html`<button
-        class="btn solid img ${GLOBAL_STATE.activeSymbol == index
+    ${Object.entries(stitches).map(
+      ([opName, index]) => html`<button
+        class="btn solid img ${GLOBAL_STATE.activeOp == opName
           ? "current"
           : ""}"
-        @click=${() => dispatch({ activeSymbol: index })}>
-        <div>${symbolName}</div>
+        @click=${() => dispatch({ activeOp: opName })}>
+        <div>${stitches[opName].name}</div>
         <svg viewBox="0 0 1 1" class="symbol-preview">
           <rect fill="white" width="100%" height="100%"></rect>
           <path
             fill="none"
             stroke="black"
             stroke-width="0.04"
-            d="${SYMBOL_PATHS[symbolName]}" />
+            d="${stitches[opName].pathdata}" />
         </svg>
       </button>`
     )}
@@ -138,6 +138,6 @@ function yarnPicker() {
 
 export function leftBar() {
   return html`<div id="left-bar" class="scroller">
-    ${symbolPicker()} ${yarnPicker()}
+    ${operationPicker()} ${yarnPicker()}
   </div>`;
 }

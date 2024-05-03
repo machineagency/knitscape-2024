@@ -3,7 +3,7 @@ import { Bimp } from "../lib/Bimp";
 
 export function generateChart() {
   return ({ state }) => {
-    let repeat = state.repeat;
+    let { repeat } = state;
     function regen() {
       let chart = Bimp.fromTile(
         GLOBAL_STATE.chart.width,

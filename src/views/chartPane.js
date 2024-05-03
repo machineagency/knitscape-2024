@@ -6,6 +6,7 @@ import { leftBar } from "./leftBar";
 
 import { posAtCoords } from "../utils";
 import { repeatEditingTools } from "../actions/repeatEditingTools";
+import { stitches } from "../constants";
 
 function editRepeat(tool) {
   // tool onMove is not called unless pointer moves into another cell in the chart
@@ -67,7 +68,10 @@ function resizeRepeat(e, direction) {
     if (newHeight < 1 || newWidth < 1) return;
 
     dispatch({
-      repeat: startRepeat.vFlip().resize(newWidth, newHeight).vFlip(),
+      repeat: startRepeat
+        .vFlip()
+        .resize(newWidth, newHeight, stitches.KNIT.id)
+        .vFlip(),
     });
   };
 

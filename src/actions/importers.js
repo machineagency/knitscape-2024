@@ -1,7 +1,8 @@
 import { Bimp } from "../lib/Bimp";
-import { GLOBAL_STATE, dispatch } from "../state";
+import { dispatch } from "../state";
 import { fitChart } from "./zoomFit";
 import randomColor from "randomcolor";
+import { PATTERN_LIBRARY } from "../constants";
 
 function loadJSON(patternJSON) {
   let { yarnSequence, yarnPalette, repeat, width, height } = patternJSON;
@@ -30,7 +31,7 @@ export function newPattern() {
 
 export function loadLibraryPattern(path) {
   dispatch({ activeModal: null });
-  GLOBAL_STATE.patternLibrary[path]().then((mod) => loadJSON(mod));
+  PATTERN_LIBRARY[path]().then((mod) => loadJSON(mod));
 }
 
 export function uploadFile() {

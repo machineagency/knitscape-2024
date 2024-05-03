@@ -4,27 +4,47 @@ export const MIN_SCALE = 5;
 export const MAX_SIM_SCALE = 6;
 export const MIN_SIM_SCALE = 0.6;
 
-export const SYMBOL_PATHS = {
-  knit: "M 0 0.5 L 0.4 0.5 C 0.7 0.5 0.7 0.2 0.5 0.2 C 0.3 0.2 0.3 0.5 0.6 0.5 L 1 0.5",
-  purl: "M 1 0.5 L 0.6 0.5 C 0.3 0.5 0.3 0.8 0.5 0.8 C 0.7 0.8 0.7 0.5 0.4 0.5 L 0 0.5",
-  slip: "M 0 0.5 L 1 0.5",
-  tuck: "M 0 0.5 L 0.2 0.5 C 0.3 0.5 0.35 0.5 0.4 0.45 C 0.45 0.4 0.4 0.2 0.5 0.2 C 0.6 0.2 0.55 0.4 0.6 0.45 C 0.65 0.5 0.7 0.5 0.8 0.5 L 1 0.5",
+export const stitches = {
+  KNIT: {
+    id: 1,
+    name: "knit",
+    punch: false,
+    backBed: false,
+    pathdata:
+      "M 0 0.5 L 0.4 0.5 C 0.7 0.5 0.7 0.2 0.5 0.2 C 0.3 0.2 0.3 0.5 0.6 0.5 L 1 0.5",
+  },
+  PURL: {
+    id: 2,
+    name: "purl",
+    punch: false,
+    backBed: true,
+    pathdata:
+      "M 1 0.5 L 0.6 0.5 C 0.3 0.5 0.3 0.8 0.5 0.8 C 0.7 0.8 0.7 0.5 0.4 0.5 L 0 0.5",
+  },
+  FM: {
+    id: 3,
+    name: "slip",
+    punch: true,
+    backBed: false,
+    pathdata: "M 0 0.5 L 1 0.5",
+  },
+  FT: {
+    id: 5,
+    name: "tuck",
+    punch: true,
+    backBed: false,
+    pathdata:
+      "M 0 0.5 L 0.2 0.5 C 0.3 0.5 0.35 0.5 0.4 0.45 C 0.45 0.4 0.4 0.2 0.5 0.2 C 0.6 0.2 0.55 0.4 0.6 0.45 C 0.65 0.5 0.7 0.5 0.8 0.5 L 1 0.5",
+  },
 };
 
-export const BACK_OPS = new Set(["purl"]);
+Object.entries(stitches).forEach(([opName, data]) => {
+  data.path2d = new Path2D(data.pathdata);
+});
 
-export const SYMBOL_BITS = {
-  knit: false,
-  purl: false,
-  slip: true,
-  tuck: true,
-};
+export const STITCH_MAP = ["", "KNIT", "PURL", "FM", "", "FT"];
 
-export const STITCH_MAP = Object.keys(SYMBOL_PATHS);
-
-export const DEFAULT_SYMBOLS = ["knit", "purl", "slip", "tuck"];
-
-export const DEFAULT_PATTERN_LIBRARY = import.meta.glob("../examples/*.json");
+export const PATTERN_LIBRARY = import.meta.glob("../examples/*.json");
 
 export const toolData = {
   brush: { icon: "fa-solid fa-paintbrush", hotkey: "b" },
