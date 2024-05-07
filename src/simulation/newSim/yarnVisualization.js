@@ -7,9 +7,7 @@ import {
   layoutNodes,
 } from "./shared";
 
-import { topDownRenderer } from "./topdown";
-
-let renderer = topDownRenderer;
+import { renderer } from "./rendering";
 
 const YARN_DIAMETER = 0.28;
 const STITCH_WIDTH = 1;

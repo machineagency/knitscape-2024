@@ -91,42 +91,6 @@ SIM PANE
   height: 100%;
 }
 
-/* 
-.top {
-  z-index: 5;
-}
-
-.mid {
-  z-index: 2;
-}
-
-.bottom {
-  z-index: 0;
-  filter: brightness(0.7);
-}
-
-.mirrored > canvas {
-  transform: scaleX(-1);
-}
-
-.sim-transform-group.right-side {
-  display: flex;
-  flex-direction: column;
-}
-
-.sim-transform-group.wrong-side {
-  display: flex;
-  flex-direction: column-reverse;
-}
-
-#back,
-#mid,
-#front {
-  position: absolute;
-  top: 0;
-  left: 0;
-} */
-
 /**********************************
 
 EDIT PANE

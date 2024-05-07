@@ -2,12 +2,12 @@
 
 priority
 
+- actually run relaxation
+- zoom/fit simulation
+- charting canvas should fill the pane
 - Ensure touch pan/zoom works properly
-- Switch topology and sim to my newer version
 - fix BMP export
 - add CSV export
-- fix zoom
-- add some sort of performance metric?
 
 simulation
 
@@ -20,6 +20,7 @@ simulation
 
 other
 
+- add some sort of performance metric?
 - add URL pattern
 - add different design modes: slip/tuck colorwork, transfer lace, maybe fair
   isle?

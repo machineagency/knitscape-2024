@@ -35,7 +35,7 @@ export function bbox3d(points) {
   };
 }
 
-export function resizeCanvasToDisplaySize(canvas) {
+export function resizeCanvasToDisplaySize(canvas, dpr = 2) {
   // Lookup the size the browser is displaying the canvas in CSS pixels.
   const displayWidth = canvas.clientWidth;
   const displayHeight = canvas.clientHeight;
@@ -46,8 +46,8 @@ export function resizeCanvasToDisplaySize(canvas) {
 
   if (needResize) {
     // Make the canvas the same size
-    canvas.width = displayWidth;
-    canvas.height = displayHeight;
+    canvas.width = displayWidth * dpr;
+    canvas.height = displayHeight * dpr;
   }
 
   return needResize;

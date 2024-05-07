@@ -1,10 +1,5 @@
 import { GLOBAL_STATE, dispatch } from "../state";
-import {
-  MIN_SCALE,
-  MAX_SCALE,
-  MIN_SIM_SCALE,
-  MAX_SIM_SCALE,
-} from "../constants";
+import { MIN_SCALE, MAX_SCALE } from "../constants";
 
 export function toggleFullscreen() {
   const doc = window.document;
@@ -38,29 +33,6 @@ export function centerZoom(scale) {
   let bbox = document.getElementById("desktop").getBoundingClientRect();
 
   zoomAtPoint({ x: bbox.width / 2, y: bbox.height / 2 }, scale);
-}
-
-export function centerZoomSimulation(scale) {
-  let bbox = document.getElementById("sim-container").getBoundingClientRect();
-
-  zoomSimulationAtPoint({ x: bbox.width / 2, y: bbox.height / 2 }, scale);
-}
-
-export function zoomSimulationAtPoint(pt, simScale) {
-  if (simScale < MIN_SIM_SCALE || simScale > MAX_SIM_SCALE) return;
-
-  const start = {
-    x: (pt.x - GLOBAL_STATE.simPan.x) / GLOBAL_STATE.simScale,
-    y: (pt.y - GLOBAL_STATE.simPan.y) / GLOBAL_STATE.simScale,
-  };
-
-  dispatch({
-    simScale,
-    simPan: {
-      x: pt.x - start.x * simScale,
-      y: pt.y - start.y * simScale,
-    },
-  });
 }
 
 export function zoomAtPoint(pt, scale) {
