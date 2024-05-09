@@ -9,7 +9,7 @@ import {
 
 import { renderer } from "./rendering";
 
-const YARN_DIAMETER = 0.28;
+const YARN_DIAMETER = 0.3;
 const STITCH_WIDTH = 1;
 const BED_OFFSET = 0.1;
 const ASPECT = 0.6;

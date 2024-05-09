@@ -1,3 +1,5 @@
+// The code in this file is adapted from the awesome resource https://webgl2fundamentals.org/
+
 function normalize(v) {
   var length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
   // make sure we don't divide by 0.
@@ -7,9 +9,11 @@ function normalize(v) {
     return [0, 0, 0];
   }
 }
+
 function subtractVectors(a, b) {
   return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 }
+
 function cross(a, b) {
   return [
     a[1] * b[2] - a[2] * b[1],
@@ -17,7 +21,11 @@ function cross(a, b) {
     a[0] * b[1] - a[1] * b[0],
   ];
 }
+
 export const m4 = {
+  identity() {
+    return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+  },
   perspective: function (fieldOfViewInRadians, aspect, near, far) {
     var f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
     var rangeInv = 1.0 / (near - far);

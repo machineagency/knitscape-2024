@@ -28,13 +28,13 @@ export function yarnRelaxation(
     const currentLength = Vec3.magnitude(Vec3.subtract(p2, p1));
 
     // Yarn does not spring back to rest length
-    // if (currentLength <= seg.restLength) return;
+    if (currentLength <= seg.restLength) return;
 
     const forceMagnitude = K_YARN * (currentLength - seg.restLength);
 
-    // const direction = Vec3.normalize(Vec3.subtract(p1, p2));
+    const direction = Vec3.normalize(Vec3.subtract(p1, p2));
 
-    const direction = Vec3.normalize(Vec3.subtract(offset1, offset2));
+    // const direction = Vec3.normalize(Vec3.subtract(offset1, offset2));
 
     const force = Vec3.scale(direction, -forceMagnitude * ALPHA);
 
@@ -115,7 +115,7 @@ export function yarnRelaxation(
       //   return;
       // }
 
-      // if (j <= 1 || j >= DS.height - 2) {
+      // if (j <= 1 || j > DS.height - 2) {
       //   // boundary top/bottom node
       //   return;
       // }
@@ -136,14 +136,14 @@ export function yarnRelaxation(
           applyYarnForce(nodes, segArr[segIndex], kYarn);
         }
 
-        for (let segIndex = 1; segIndex + 1 < segArr.length; segIndex++) {
-          torsion(
-            nodes,
-            segArr[segIndex - 1],
-            segArr[segIndex],
-            segArr[segIndex + 1]
-          );
-        }
+        // for (let segIndex = 1; segIndex + 1 < segArr.length; segIndex++) {
+        //   torsion(
+        //     nodes,
+        //     segArr[segIndex - 1],
+        //     segArr[segIndex],
+        //     segArr[segIndex + 1]
+        //   );
+        // }
       });
 
       updateContactNodePositions(DS, nodes);
