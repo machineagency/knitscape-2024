@@ -1,13 +1,19 @@
 import { hexToRgb } from "../../utils";
 import { yarnRelaxation } from "./relaxation";
-import {
-  segmentsToPoints,
-  generateTopology,
-  computeYarnPathSpline,
-  layoutNodes,
-} from "./shared";
-
+import { segmentsToPoints, computeYarnPathSpline, layoutNodes } from "./shared";
+import { makeDS } from "./YarnDS";
 import { renderer } from "./rendering";
+
+const worker = new Worker(new URL("./splineWorker.js", import.meta.url), {
+  type: "module",
+});
+
+const topologyWorker = new Worker(
+  new URL("./topologyWorker.js", import.meta.url),
+  {
+    type: "module",
+  }
+);
 
 const YARN_DIAMETER = 0.3;
 const STITCH_WIDTH = 1;
@@ -24,45 +30,75 @@ export function visualizeYarn(stitchPattern, yarnPalette) {
 
   let canvas = document.getElementById("sim-canvas");
   let relaxed = false;
-  let sim;
+  let initialized = false;
+  let sim, DS, yarnPath, yarnData, segments, nodes;
 
-  const { DS, yarnPath } = generateTopology(stitchPattern);
+  topologyWorker.postMessage(stitchPattern);
+  topologyWorker.onmessage = (e) => {
+    let res = e.data;
+    yarnPath = res.yarnPath;
+    DS = makeDS(res.width, res.height, res.data);
+    init();
+  };
 
-  const nodes = layoutNodes(DS, stitchPattern, params);
+  function init() {
+    nodes = layoutNodes(DS, stitchPattern, params);
 
-  const segments = computeYarnPathSpline(
-    DS,
-    yarnPath,
-    stitchPattern,
-    nodes,
-    params
-  );
+    segments = computeYarnPathSpline(
+      DS,
+      yarnPath,
+      stitchPattern,
+      nodes,
+      params
+    );
 
-  const yarnData = Object.entries(segments).map(([yarnIndex, segmentArr]) => {
-    return {
-      yarnIndex: yarnIndex,
-      pts: segmentsToPoints(segmentArr, nodes),
-      diameter: YARN_DIAMETER,
-      color: hexToRgb(yarnPalette[yarnIndex]).map((colorInt) => colorInt / 255),
+    yarnData = Object.entries(segments).map(([yarnIndex, segmentArr]) => {
+      const rgbYarn = hexToRgb(yarnPalette[yarnIndex]);
+      return {
+        yarnIndex: yarnIndex,
+        pts: new Array(segmentArr.length * 2),
+        splinePts: [],
+        diameter: YARN_DIAMETER,
+        color: rgbYarn.map((colorInt) => colorInt / 255),
+      };
+    });
+
+    worker.onmessage = (e) => {
+      for (let i = 0; i < yarnData.length; i++) {
+        yarnData[i].splinePts = e.data[i];
+      }
+
+      if (!initialized) {
+        renderer.init(yarnData, canvas);
+        initialized = true;
+      } else {
+        renderer.uploadYarnData(yarnData);
+      }
     };
-  });
 
-  renderer.init(yarnData, canvas);
+    computeControlPoints();
+
+    worker.postMessage(yarnData);
+  }
+
+  function computeControlPoints() {
+    for (let i = 0; i < yarnData.length; i++) {
+      yarnData[i].pts = segmentsToPoints(
+        segments[yarnData[i].yarnIndex],
+        nodes
+      );
+    }
+  }
 
   function draw() {
     if (sim && sim.running()) {
       sim.tick(segments, DS, nodes);
+      computeControlPoints();
 
-      for (let i = 0; i < yarnData.length; i++) {
-        yarnData[i].pts = segmentsToPoints(
-          segments[yarnData[i].yarnIndex],
-          nodes
-        );
-      }
-
-      renderer.updateYarnGeometry(yarnData);
+      worker.postMessage(yarnData);
     }
-    renderer.draw();
+
+    if (initialized) renderer.draw();
   }
 
   function relax() {

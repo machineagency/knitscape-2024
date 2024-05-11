@@ -13,9 +13,6 @@ let GLOBAL_STATE = {
   repeatPos: [-1, -1], // Mouse position in repeat
   chartPan: { x: 0, y: 0 }, // Pan value for the chart editor view
 
-  simScale: 1,
-  simPan: { x: 0, y: 0 },
-
   activeYarn: 0,
   yarnPalette: ["#1013bd", "#ebe9bb", "#f75500"], // Colors of the yarns
   yarnSequence: new Bimp(1, 8, [1, 1, 1, 1, 2, 2, 0, 0]),
@@ -23,17 +20,15 @@ let GLOBAL_STATE = {
   repeat: new Bimp(
     4,
     8,
-
     [
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 5, 1, 1, 1, 5, 1, 1, 1,
       5, 1, 1, 1, 5, 1, 1,
     ]
   ),
 
-  chart: Bimp.empty(48, 60, 0),
+  chart: Bimp.empty(45, 70, 0),
 
   reverseScroll: false,
-  flipped: false,
 
   // PUNCH CARD
   punchcardMode: false, // constrains repeat width to a punchcard-friendly width

@@ -32,12 +32,13 @@ export function runSimulation() {
 
     return {
       syncState(state, changes) {
-        const found = ["repeat", "yarnPalette", "yarnSequence", "chart"].some(
-          (key) => changes.includes(key)
+        const found = ["yarnPalette", "yarnSequence", "chart"].some((key) =>
+          changes.includes(key)
         );
 
         if (found) {
-          debouncedYarnView(state);
+          // debouncedYarnView(state);
+          generateYarnView(state);
         }
       },
     };

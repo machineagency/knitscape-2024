@@ -12,7 +12,7 @@ function loadJSON(patternJSON) {
     width,
     height,
     yarnSequence: Bimp.fromJSON(yarnSequence),
-    chart: Bimp.empty(width, height, 0),
+    chart: Bimp.empty(width, height, 1),
     repeat: Bimp.fromJSON(repeat),
   });
 
@@ -23,8 +23,8 @@ export function newPattern() {
   dispatch({
     yarnSequence: new Bimp(1, 4, [0, 0, 1, 1]),
     yarnPalette: [randomColor(), randomColor()],
-    chart: Bimp.empty(30, 40, 0),
-    repeat: new Bimp(4, 4, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+    chart: Bimp.empty(30, 40, 1),
+    repeat: new Bimp(4, 4, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]),
   });
   fitChart();
 }

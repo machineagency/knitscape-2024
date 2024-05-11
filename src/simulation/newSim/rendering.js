@@ -5,7 +5,6 @@ import {
 } from "./helpers";
 
 import { m4 } from "./math/m4";
-import { buildYarnCurve } from "./yarnSpline";
 
 const segVS = /* glsl */ `#version 300 es
 precision highp float;
@@ -227,18 +226,14 @@ const camera = {
   wasFit: false,
 };
 
-const DIVISIONS = 8;
-const depthTextureSize = 4096;
+const depthTextureSize = 512;
 
 let yarnProgramData = [];
 
 function initShaders() {
   segmentProgramInfo = initShaderProgram(gl, segVS, FS);
-
   joinProgramInfo = initShaderProgram(gl, joinVS, FS);
-
   segmentDepthProgramInfo = initShaderProgram(gl, segColorVS, colorFS);
-
   joinDepthProgramInfo = initShaderProgram(gl, joinColorVS, colorFS);
 }
 
@@ -361,15 +356,14 @@ function createJoinVAO(yarnBuffer, joinBuffer) {
 
 function initYarn(yarn) {
   const splineBuffer = gl.createBuffer();
-  const splinePts = buildYarnCurve(yarn.pts, DIVISIONS);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, splineBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(splinePts), gl.DYNAMIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, yarn.splinePts, gl.STATIC_DRAW);
 
   return {
     controlPoints: yarn.pts,
     yarnSplineBuffer: splineBuffer,
-    segCount: splinePts.length / 3 - 1,
+    segCount: yarn.splinePts.length / 3 - 1,
     u_color: yarn.color,
     u_width: yarn.diameter,
     segmentVAO: createSegmentVAO(splineBuffer, segmentInstanceBuffer),
@@ -427,9 +421,11 @@ export function init(yarnData, canvas) {
 
   initInstanceGeometryBuffers();
   initDepth();
-
+  deleteBuffers();
   yarnProgramData = yarnData.map((yarn) => initYarn(yarn));
 
+  stale = false;
+  updateCamera();
   if (!camera.wasFit) fit();
 }
 
@@ -449,12 +445,11 @@ function updateSwatchBbox() {
 export function fit() {
   updateSwatchBbox();
 
+  const swatchAspect = bbox.dimensions[0] / bbox.dimensions[1];
   const zoom =
-    1.2 *
-    Math.max(
-      Math.ceil(gl.canvas.clientWidth / bbox.dimensions[0]),
-      Math.ceil(gl.canvas.clientHeight / bbox.dimensions[1])
-    );
+    swatchAspect > camera.aspect
+      ? (1.1 * bbox.dimensions[0]) / 2
+      : (1.1 * bbox.dimensions[1] * camera.aspect) / 2;
 
   camera.zoom = zoom;
   camera.x = bbox.center[0];
@@ -739,8 +734,14 @@ function drawYarnDepth(yarn, lightProjectionMatrix, lightViewMatrix) {
   );
 }
 
+function deleteBuffers() {
+  yarnProgramData.forEach((yarn) => gl.deleteBuffer(yarn.yarnSplineBuffer));
+}
+
 function draw() {
   updateCamera();
+
+  if (stale) updateYarnGeometry();
 
   gl.enable(gl.CULL_FACE);
   gl.enable(gl.DEPTH_TEST);
@@ -783,17 +784,26 @@ function draw() {
   );
 }
 
-function updateYarnGeometry(yarnData) {
+let yarnData;
+let stale = false;
+
+function uploadYarnData(newData) {
+  yarnData = newData;
+  stale = true;
+}
+
+function updateYarnGeometry() {
   yarnData.forEach((yarn, yarnIndex) => {
-    const splinePts = new Float32Array(buildYarnCurve(yarn.pts, DIVISIONS));
     gl.bindBuffer(gl.ARRAY_BUFFER, yarnProgramData[yarnIndex].yarnSplineBuffer);
-    gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(splinePts));
-    yarnProgramData[yarnIndex].controlPoints = yarn.pts;
+    // gl.bufferSubData(gl.ARRAY_BUFFER, 0, yarn.splinePts);
+    gl.bufferData(gl.ARRAY_BUFFER, yarn.splinePts, gl.STATIC_DRAW);
   });
+
+  stale = false;
 }
 
 export const renderer = {
   init,
   draw,
-  updateYarnGeometry,
+  uploadYarnData,
 };

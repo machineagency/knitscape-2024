@@ -6,11 +6,8 @@
 }
 
 body {
-  --font-size: 0.8rem;
-  width: 100vw;
-  height: 100vh;
-
-  font-size: var(--font-size);
+  width: 100dvw;
+  height: 100dvh;
 
   font-family: "National Park";
   display: flex;

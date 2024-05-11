@@ -270,6 +270,13 @@ function processStitch(st, iFirst, iSecond, j, DS) {
   }
 }
 
+function op(pattern, x, y) {
+  if (x > pattern.width - 1 || x < 0 || y > pattern.height - 1 || y < 0) {
+    return -1;
+  }
+  return pattern.ops.at(x + y * pattern.width);
+}
+
 function populateGrid(pattern, DS) {
   for (let n = 0; n < pattern.height; n++) {
     const j = n;
@@ -277,13 +284,13 @@ function populateGrid(pattern, DS) {
     if (pattern.carriagePasses[n] == "right") {
       // left to right
       for (let m = 0; m < pattern.width; m++) {
-        const st = pattern.op(m, n); // get current operation
+        const st = op(pattern, m, n); // get current operation
         processStitch(st, 2 * m, 2 * m + 1, j, DS);
       }
     } else if (pattern.carriagePasses[n] == "left") {
       // right to left
       for (let m = pattern.width - 1; m > -1; m--) {
-        const st = pattern.op(m, n);
+        const st = op(pattern, m, n);
         processStitch(st, 2 * m + 1, 2 * m, j, DS);
       }
     }
@@ -306,8 +313,8 @@ export function populateDS(pattern, populateFirstRow = true) {
   if (populateFirstRow) {
     for (let i = 0; i < 2 * pattern.width; i++) {
       if (
-        pattern.op(Math.floor(i / 2), 0) == stitches.KNIT ||
-        pattern.op(Math.floor(i / 2), 0) == stitches.PURL
+        op(pattern, Math.floor(i / 2), 0) == stitches.KNIT ||
+        op(pattern, Math.floor(i / 2), 0) == stitches.PURL
       ) {
         grid[i][1] = cnStates.PCN;
         grid[i][2] = [0, 0];
@@ -826,7 +833,7 @@ function cnStitchPairs(cnList, pattern) {
     } else {
       m = (cnI - 1) / 2;
     }
-    pairs.push([cnI, cnJ, pattern.op(m, n)]);
+    pairs.push([cnI, cnJ, op(pattern, m, n)]);
   }
 
   return pairs;

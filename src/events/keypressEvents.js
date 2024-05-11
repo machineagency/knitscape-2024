@@ -1,8 +1,7 @@
 import { GLOBAL_STATE, dispatch, undo } from "../state";
-import { toolData, stitches } from "../constants";
+import { toolData } from "../constants";
 
 const ctrlShortcuts = {
-  a: () => console.log("select all?"),
   z: () => undo(),
   s: () => dispatch({ activeModal: "download" }),
 };
@@ -23,9 +22,10 @@ const hotkeys = {
   Escape: () => dispatch({ activeModal: null }),
 };
 
-function symbolSwitch(index) {
-  if (index <= stitches.length) dispatch({ activeOp: index });
-}
+// function symbolSwitch(index) {
+//   console.log(index);
+//   if (index <= stitches.length) dispatch({ activeOp: index });
+// }
 
 export function addKeypressListeners() {
   window.addEventListener("keydown", (e) => {
@@ -33,7 +33,9 @@ export function addKeypressListeners() {
       e.preventDefault();
       ctrlShortcuts[e.key.toLowerCase()]();
     } else if (e.key in hotkeys) hotkeys[e.key]();
-    else if (/^[0-9]$/i.test(e.key)) symbolSwitch(Number(e.key) - 1);
+
+    // else if (/^[0-9]$/i.test(e.key)) symbolSwitch(Number(e.key) - 1);
+
     const newHeldKeys = new Set(GLOBAL_STATE.heldKeys);
     newHeldKeys.add(e.key);
     dispatch({ heldKeys: newHeldKeys });

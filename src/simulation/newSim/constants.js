@@ -1,15 +1,3 @@
-export const MAX_SCALE = 100;
-export const MIN_SCALE = 5;
-
-export const MAX_SIM_SCALE = 6;
-export const MIN_SIM_SCALE = 0.6;
-
-export const SNAPSHOT_INTERVAL = 5000;
-
-export const SNAPSHOT_FIELDS = ["yarnPalette", "boundary"];
-
-export const EXAMPLE_LIBRARY = import.meta.glob("../examples/*.json");
-
 export const BACK_OPS = new Set([
   "PURL",
   "BT",
@@ -331,8 +319,6 @@ export const stitches = {
   BL3: 33,
 };
 
-export const STITCH_MAP = Object.keys(stitches);
-
 export const cnStates = {
   ECN: 0, // Empty
   PCN: 1, // Potential
@@ -341,4 +327,4 @@ export const cnStates = {
 };
 
 export const MAX_H_SHIFT = 6; // maximum horizontal shift for CNs (2x the number of stitches)
-export const MAX_V_SHIFT = 20; // maximum vertical shift for CNs
+export const MAX_V_SHIFT = 8; // maximum vertical shift for CNs

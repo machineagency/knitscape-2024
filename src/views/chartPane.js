@@ -40,6 +40,7 @@ function editRepeat(tool) {
 function resizeRepeat(e, direction) {
   // Ignore middle mouse button
   if (e.which == 2 || e.button == 4) return;
+
   const { repeat: startRepeat } = GLOBAL_STATE;
   const startPos = [e.clientX, e.clientY];
 
@@ -66,6 +67,12 @@ function resizeRepeat(e, direction) {
         : startRepeat.height;
 
     if (newHeight < 1 || newWidth < 1) return;
+
+    if (
+      newWidth == GLOBAL_STATE.repeat.width &&
+      newHeight == GLOBAL_STATE.repeat.height
+    )
+      return;
 
     dispatch({
       repeat: startRepeat

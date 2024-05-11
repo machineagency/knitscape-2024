@@ -5,11 +5,33 @@ import { Vec3 } from "./Vec3";
 import { stitches } from "./constants";
 
 export function generateTopology(stitchPattern) {
+  // performance.mark("begin-topogen");
+
   const DS = populateDS(stitchPattern);
+
+  // performance.mark("DS");
 
   orderCNs(DS, stitchPattern);
 
-  let yarnPath = followTheYarn(DS, stitchPattern.carriagePasses);
+  // performance.mark("cn-order");
+
+  const yarnPath = followTheYarn(DS, stitchPattern.carriagePasses);
+
+  // performance.mark("finish-topogen");
+
+  // const makeDS = performance.measure("make-DS", "begin-topogen", "DS");
+  // const cnOrder = performance.measure("cn-order", "DS", "cn-order");
+  // const makeYarnPath = performance.measure("yp", "cn-order", "finish-topogen");
+  // const total = performance.measure(
+  //   "topology-generation",
+  //   "begin-topogen",
+  //   "finish-topogen"
+  // );
+
+  // console.log("Make DS:", makeDS.duration);
+  // console.log("Order CNs:", cnOrder.duration);
+  // console.log("Yarn Path:", makeYarnPath.duration);
+  // console.log("Total:", total.duration);
 
   return { DS, yarnPath };
 }
@@ -84,7 +106,7 @@ export function computeYarnPathSpline(
   nodes,
   { ASPECT = 0.75, YARN_RADIUS = 0.2, STITCH_WIDTH = 1 }
 ) {
-  const links = {};
+  const segments = {};
 
   for (let ypIndex = 0; ypIndex < yarnPath.length; ypIndex++) {
     let [i, j, row] = yarnPath[ypIndex];
@@ -93,8 +115,13 @@ export function computeYarnPathSpline(
     let { layer, legNode } = getYarnPositionAtNode(DS, ypIndex, i, j);
     let currentYarn = stitchPattern.yarnSequence[row];
 
-    if (!(currentYarn in links)) {
-      links[currentYarn] = [
+    if (currentYarn == undefined) {
+      console.warn("encountered undefined yarn at row", row);
+      continue;
+    }
+
+    if (!(currentYarn in segments)) {
+      segments[currentYarn] = [
         {
           source: currIndex,
           sourceOffset: [0, 0, 0],
@@ -203,7 +230,7 @@ export function computeYarnPathSpline(
       dxFront = tempX;
     }
 
-    let curr = links[currentYarn];
+    let curr = segments[currentYarn];
     let prev = curr.at(-1);
     prev.target = currIndex;
     prev.leg[1] = legNode;
@@ -216,6 +243,7 @@ export function computeYarnPathSpline(
       restLength: undefined,
       leg: [legNode, undefined],
     };
+
     curr.push(next);
 
     if (movingRight == evenI) {
@@ -267,7 +295,7 @@ export function computeYarnPathSpline(
     }
   }
 
-  Object.entries(links).forEach(([yarnIndex, linkArr]) => {
+  Object.entries(segments).forEach(([yarnIndex, linkArr]) => {
     const lastLink = linkArr.at(-1);
 
     lastLink.target = lastLink.source;
@@ -279,7 +307,7 @@ export function computeYarnPathSpline(
     );
     lastLink.restLength = isLoop ? dist * ASPECT * 0.6 : dist;
   });
-  return links;
+  return segments;
 }
 
 export function layoutNodes(

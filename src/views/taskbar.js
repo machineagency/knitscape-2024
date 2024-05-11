@@ -3,12 +3,17 @@ import { GLOBAL_STATE, dispatch, undo } from "../state";
 import { toggleFullscreen } from "../actions/zoomFit";
 import { newPattern, uploadFile } from "../actions/importers";
 import { fitChart } from "../actions/zoomFit";
+import { stitches } from "../constants";
 
 function updateChartWidth(newWidth) {
   newWidth = newWidth > 500 ? 500 : newWidth;
 
   dispatch({
-    chart: GLOBAL_STATE.chart.resize(newWidth, GLOBAL_STATE.chart.height),
+    chart: GLOBAL_STATE.chart.resize(
+      newWidth,
+      GLOBAL_STATE.chart.height,
+      stitches.KNIT.id
+    ),
   });
 
   fitChart();
@@ -17,7 +22,11 @@ function updateChartWidth(newWidth) {
 function updateChartHeight(newHeight) {
   newHeight = newHeight > 500 ? 500 : newHeight;
   dispatch({
-    chart: GLOBAL_STATE.chart.resize(GLOBAL_STATE.chart.width, newHeight),
+    chart: GLOBAL_STATE.chart.resize(
+      GLOBAL_STATE.chart.width,
+      newHeight,
+      stitches.KNIT.id
+    ),
   });
 
   fitChart();
