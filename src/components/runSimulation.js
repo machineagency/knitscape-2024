@@ -1,18 +1,9 @@
 import { visualizeYarn } from "../simulation/newSim/yarnVisualization";
 import { Swatch } from "../simulation/newSim/Swatch";
 
-function debounce(callback, wait) {
-  let timeoutId = null;
-  return (...args) => {
-    window.clearTimeout(timeoutId);
-    timeoutId = window.setTimeout(() => {
-      callback.apply(null, args);
-    }, wait);
-  };
-}
-
 function generateYarnView(state) {
   if (state.stopSim) state.stopSim();
+  if (state.simDraw) state.simDraw = null;
 
   let { stopSim, relax, draw } = visualizeYarn(
     new Swatch(state.chart, state.yarnSequence.pixels, state.rowMap),
@@ -23,8 +14,6 @@ function generateYarnView(state) {
   state.simDraw = draw;
   state.relax = relax;
 }
-
-const debouncedYarnView = debounce(generateYarnView, 30);
 
 export function runSimulation() {
   return ({ state }) => {
@@ -37,7 +26,6 @@ export function runSimulation() {
         );
 
         if (found) {
-          // debouncedYarnView(state);
           generateYarnView(state);
         }
       },

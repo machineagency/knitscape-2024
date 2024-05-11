@@ -1,12 +1,12 @@
 import { Vec3 } from "./Vec3";
 
 export function yarnRelaxation(
-  kYarn = 0.4,
+  kYarn = 0.3,
   tYarn = 0.01,
   alphaMin = 0.001,
   alphaTarget = 0,
   iterations = 4,
-  velocityDecay = 0.5
+  velocityDecay = 0.25
 ) {
   let ALPHA = 1;
   let ALPHA_MIN = alphaMin;
@@ -127,6 +127,7 @@ export function yarnRelaxation(
   }
 
   function tick(yarns, DS, nodes) {
+    if (!running) return;
     for (var k = 0; k < iterations; ++k) {
       ALPHA += (ALPHA_TARGET - ALPHA) * ALPHA_DECAY;
       // Accumulate forces to nodes

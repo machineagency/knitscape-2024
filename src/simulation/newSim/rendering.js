@@ -424,7 +424,7 @@ export function init(yarnData, canvas) {
   deleteBuffers();
   yarnProgramData = yarnData.map((yarn) => initYarn(yarn));
 
-  stale = false;
+  // stale = false;
   updateCamera();
   if (!camera.wasFit) fit();
 }
@@ -443,6 +443,7 @@ function updateSwatchBbox() {
 }
 
 export function fit() {
+  camera.wasFit = true;
   updateSwatchBbox();
 
   const swatchAspect = bbox.dimensions[0] / bbox.dimensions[1];

@@ -15,6 +15,12 @@ const topologyWorker = new Worker(
   }
 );
 
+let splineStale = false;
+let splineWorkerBusy = false;
+
+let topoStale = true;
+let topoWorkerBusy = false;
+
 const YARN_DIAMETER = 0.3;
 const STITCH_WIDTH = 1;
 const BED_OFFSET = 0.1;
@@ -31,10 +37,13 @@ export function visualizeYarn(stitchPattern, yarnPalette) {
   let canvas = document.getElementById("sim-canvas");
   let relaxed = false;
   let initialized = false;
-  let sim, DS, yarnPath, yarnData, segments, nodes;
 
-  topologyWorker.postMessage(stitchPattern);
+  let sim, DS, yarnPath, yarnData, segments, nodes;
+  topoStale = true;
+
   topologyWorker.onmessage = (e) => {
+    topoWorkerBusy = false;
+    topoStale = false;
     let res = e.data;
     yarnPath = res.yarnPath;
     DS = makeDS(res.width, res.height, res.data);
@@ -68,6 +77,9 @@ export function visualizeYarn(stitchPattern, yarnPalette) {
         yarnData[i].splinePts = e.data[i];
       }
 
+      splineStale = false;
+      splineWorkerBusy = false;
+
       if (!initialized) {
         renderer.init(yarnData, canvas);
         initialized = true;
@@ -79,6 +91,7 @@ export function visualizeYarn(stitchPattern, yarnPalette) {
     computeControlPoints();
 
     worker.postMessage(yarnData);
+    splineWorkerBusy = true;
   }
 
   function computeControlPoints() {
@@ -91,10 +104,21 @@ export function visualizeYarn(stitchPattern, yarnPalette) {
   }
 
   function draw() {
+    if (topoStale && !topoWorkerBusy) {
+      topoStale = false;
+      topoWorkerBusy = true;
+      topologyWorker.postMessage(stitchPattern);
+    }
+
     if (sim && sim.running()) {
       sim.tick(segments, DS, nodes);
       computeControlPoints();
+      splineStale = true;
+    }
 
+    if (splineStale && !splineWorkerBusy) {
+      splineStale = false;
+      splineWorkerBusy = true;
       worker.postMessage(yarnData);
     }
 
