@@ -78,6 +78,7 @@ let gl,
   chart;
 
 let cell = [0, 0];
+let cellAspect = 0.6;
 
 export function initChart(c, canvas) {
   gl = canvas.getContext("webgl2");
@@ -226,7 +227,7 @@ export function initChart(c, canvas) {
 
 function updateCamera() {
   resizeCanvasToDisplaySize(gl.canvas);
-  camera.aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  camera.aspect = (cellAspect * gl.canvas.clientWidth) / gl.canvas.clientHeight;
 }
 
 export function renderChart() {
