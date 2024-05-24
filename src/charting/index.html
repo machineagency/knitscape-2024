@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chart Renderer Testing</title>
+  </head>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+    }
+
+    #chart {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    #fit {
+      position: absolute;
+      right: 0;
+      cursor: pointer;
+    }
+  </style>
+  <body>
+    <button id="fit">Fit Chart</button>
+    <canvas id="chart"></canvas>
+    <script src="index.js" type="module"></script>
+  </body>
+</html>
