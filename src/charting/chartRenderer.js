@@ -1,4 +1,5 @@
 import { m4 } from "../simulation/newSim/math/m4";
+import { Vec3 } from "../simulation/newSim/Vec3";
 
 const VS = /* glsl */ `#version 300 es
 
@@ -33,6 +34,24 @@ void main() {
   outColor = texture(u_palette, vec2(symbolCoord, 0));
 }`;
 
+const outlineVS = /* glsl */ `#version 300 es
+in vec2 a_position;
+uniform mat4 u_matrix;
+
+void main() {
+  gl_Position =  u_matrix * vec4(a_position,0.1, 1);
+}
+`;
+
+const outlineFS = /* glsl */ `#version 300 es
+precision highp float;
+
+out vec4 outColor;
+ 
+void main() {
+  outColor = vec4(0, 0, 0, 1);
+}`;
+
 const symbolColors = new Uint8Array([
   230, 0, 0, 255, 8, 204, 171, 255, 7, 158, 133, 255, 0, 200, 50, 255, 0, 100,
   255, 255, 235, 64, 52, 255,
@@ -49,7 +68,16 @@ const camera = {
   far: 100,
 };
 
-let gl, program, vao, positionBuffer, chart;
+let gl,
+  program,
+  outlineProgram,
+  vao,
+  outlineVAO,
+  positionBuffer,
+  boxBuffer,
+  chart;
+
+let cell = [0, 0];
 
 export function initChart(c, canvas) {
   gl = canvas.getContext("webgl2");
@@ -59,7 +87,30 @@ export function initChart(c, canvas) {
 
   chart = c;
 
+  outlineProgram = initShaderProgram(gl, outlineVS, outlineFS);
+  outlineVAO = gl.createVertexArray();
+  gl.bindVertexArray(outlineVAO);
+  boxBuffer = gl.createBuffer();
+
+  gl.enableVertexAttribArray(outlineProgram.attribLocations.a_position);
+  gl.bindBuffer(gl.ARRAY_BUFFER, boxBuffer);
+
+  var size = 2; // 2 components per iteration
+  var type = gl.FLOAT; // the data is 32bit floats
+  var normalize = false; // don't normalize the data
+  var stride = 0; // 0 = move forward size * sizeof(type) each iteration to get the next position
+  var offset = 0; // start at the beginning of the buffer
+  gl.vertexAttribPointer(
+    outlineProgram.attribLocations.a_position,
+    size,
+    type,
+    normalize,
+    stride,
+    offset
+  );
+
   program = initShaderProgram(gl, VS, FS);
+
   vao = gl.createVertexArray();
 
   // and make it the one we're currently working with
@@ -115,7 +166,6 @@ export function initChart(c, canvas) {
   // DATA TEXTURE
   ////////////////////////
 
-  // Create a texture.
   const chartTexture = gl.createTexture();
 
   // use texture unit 0
@@ -182,16 +232,12 @@ function updateCamera() {
 export function renderChart() {
   updateCamera();
 
-  // Tell WebGL how to convert from clip space to pixels
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
-  // Clear the canvas
   gl.clearColor(0, 0, 0, 0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   const matrix = computeMatrix();
 
-  // Tell it to use our program (pair of shaders)
   gl.useProgram(program.program);
 
   gl.bindVertexArray(vao);
@@ -203,7 +249,6 @@ export function renderChart() {
 
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
-  // Set a rectangle the same size as the image.
   const rectData = chartRect(0, 0, chart.width, chart.height);
 
   gl.bufferData(gl.ARRAY_BUFFER, rectData, gl.STATIC_DRAW);
@@ -212,6 +257,33 @@ export function renderChart() {
     gl.TRIANGLES, // primitive type
     0, // offset
     6 // count
+  );
+
+  gl.useProgram(outlineProgram.program);
+  gl.bindVertexArray(outlineVAO);
+  gl.uniformMatrix4fv(outlineProgram.uniformLocations.u_matrix, false, matrix);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, boxBuffer);
+  gl.bufferData(
+    gl.ARRAY_BUFFER,
+    new Float32Array([
+      cell[0],
+      cell[1],
+      cell[0],
+      cell[1] + 1,
+      cell[0] + 1,
+      cell[1] + 1,
+      cell[0] + 1,
+      cell[1],
+      cell[0],
+      cell[1],
+    ]),
+    gl.STATIC_DRAW
+  );
+  gl.drawArrays(
+    gl.LINE_STRIP, // primitive type
+    0, // offset
+    5 // count
   );
 }
 
@@ -391,6 +463,18 @@ export function pan(e) {
   window.addEventListener("pointermove", move);
   window.addEventListener("pointerup", end);
   window.addEventListener("pointerleave", end);
+}
+
+export function mouseCell(e) {
+  const clip = mouseClip(e);
+  const matrix = computeMatrix();
+
+  const chartCoords = Vec3.m4transform(
+    [clip[0], clip[1], 0],
+    m4.inverse(matrix)
+  );
+
+  cell = [Math.floor(chartCoords[0]), Math.floor(chartCoords[1])];
 }
 
 function mouseClip(e) {

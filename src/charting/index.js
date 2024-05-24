@@ -1,12 +1,20 @@
-import { initChart,renderChart, fit, pan, zoom } from "./chartRenderer";
+import {
+  initChart,
+  renderChart,
+  fit,
+  pan,
+  zoom,
+  mouseCell,
+} from "./chartRenderer";
 import { Bimp } from "../lib/Bimp";
 
 const c = document.getElementById("chart");
 const fitBtn = document.getElementById("fit");
 
-c.addEventListener("pointerdown", pan)
-c.addEventListener("wheel", zoom)
-fitBtn.addEventListener("click", fit)
+c.addEventListener("pointerdown", pan);
+c.addEventListener("wheel", zoom);
+c.addEventListener("pointermove", mouseCell);
+fitBtn.addEventListener("click", fit);
 
 const chart = new Bimp(
   8,
@@ -26,7 +34,7 @@ fit();
 
 function r() {
   renderChart();
-  window.requestAnimationFrame(r)
+  window.requestAnimationFrame(r);
 }
 
-r()
+r();
