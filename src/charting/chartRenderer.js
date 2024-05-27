@@ -22,16 +22,31 @@ precision highp float;
 
 uniform sampler2D u_chart;
 uniform sampler2D u_palette;
+uniform sampler2D u_symbols;
+
 uniform float u_paletteSize;
+uniform vec2 u_chartSize;
+
 
 in vec2 v_texCoord;
 out vec4 outColor;
  
 void main() {
-  float symbolIndex = floor(texture(u_chart, v_texCoord).x * 256.0) + 0.5;
-  float symbolCoord = symbolIndex / u_paletteSize;
 
-  outColor = texture(u_palette, vec2(symbolCoord, 0));
+  vec2 cellSize = 1. / u_chartSize;
+  vec2 cellPos = fract(v_texCoord/cellSize); // position in the chart cell (0-1)
+
+  float symbolIndex = floor((texture(u_chart, v_texCoord).x * 256.0));
+
+  float symbolX = (cellPos.x + symbolIndex) / u_paletteSize;
+  float symbolY = 1.0 - cellPos.y;
+
+  vec4 inSymbolLine = texture(u_symbols, vec2(symbolX, symbolY));
+
+  vec4 symbolColor = vec4(0.1, 0.1, 0.1, 1.0);
+  vec4 backgroundColor = texture(u_palette, vec2((symbolIndex+0.5) / u_paletteSize, 0.));
+
+  outColor = mix(symbolColor, backgroundColor, inSymbolLine.r);
 }`;
 
 const outlineVS = /* glsl */ `#version 300 es
@@ -78,7 +93,7 @@ let gl,
   chart;
 
 let cell = [0, 0];
-let cellAspect = 0.6;
+let cellAspect = 1;
 
 export function initChart(c, canvas) {
   gl = canvas.getContext("webgl2");
@@ -222,6 +237,50 @@ export function initChart(c, canvas) {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
+  ////////////////////////
+  // SYMBOL TEXTURE
+  ////////////////////////
+
+  // Create a texture.
+  const symbolTexture = gl.createTexture();
+
+  gl.activeTexture(gl.TEXTURE2 + 0);
+  gl.bindTexture(gl.TEXTURE_2D, symbolTexture);
+
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+
+  // Asynchronously load an image
+  let symbols = new Image();
+  symbols.src = "../../assets/stitches.png";
+  symbols.addEventListener("load", () => {
+    // Now that the image has loaded make copy it to the texture.
+    gl.bindTexture(gl.TEXTURE_2D, symbolTexture);
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      symbols
+    );
+    // set the filtering so we don't need mips and it's not filtered
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  });
+
   updateCamera();
 }
 
@@ -245,8 +304,13 @@ export function renderChart() {
 
   gl.uniformMatrix4fv(program.uniformLocations.u_matrix, false, matrix);
   gl.uniform1f(program.uniformLocations.u_paletteSize, symbolColors.length / 4);
+
+  gl.uniform2f(program.uniformLocations.u_chartSize, chart.width, chart.height);
+
+  // Texture uniforms
   gl.uniform1i(program.uniformLocations.u_chart, 0);
   gl.uniform1i(program.uniformLocations.u_palette, 1);
+  gl.uniform1i(program.uniformLocations.u_symbols, 2);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
