@@ -23,10 +23,26 @@
       right: 0;
       cursor: pointer;
     }
+
+    .pinch {
+      background-color: white;
+    }
+
+    #debug {
+      background-color: white;
+      color: black;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      width: 100px;
+      height: 100px;
+    }
   </style>
-  <body>
+  <body style="touch-action: none">
     <button id="fit">Fit Chart</button>
     <canvas id="chart"></canvas>
+    <div id="debug">asdf</div>
     <script src="index.js" type="module"></script>
   </body>
 </html>

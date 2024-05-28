@@ -476,16 +476,34 @@ export function fit() {
   camera.y = chart.height / 2;
 }
 
-export function zoom(e) {
-  e.preventDefault();
-  const [clipX, clipY] = mouseClip(e);
+export function pan(startPos) {
+  let { x: x0, y: y0 } = camera;
+
+  let clipStart = mouseClip(startPos);
+
+  function onPan(currentPos) {
+    let clipCurrent = mouseClip(currentPos);
+
+    let dxClip = Math.sign(camera.side) * (clipCurrent[0] - clipStart[0]);
+    let dyClip = clipCurrent[1] - clipStart[1];
+
+    camera.x = x0 - dxClip * camera.zoom;
+    camera.y = y0 - (dyClip * camera.zoom) / camera.aspect;
+  }
+
+  return onPan;
+}
+
+export function zoom(target, multiplier) {
+  const [clipX, clipY] = mouseClip(target);
 
   const preZoom = {
     x: clipX * camera.zoom,
     y: clipY * (camera.zoom / camera.aspect),
   };
 
-  const newZoom = camera.zoom / Math.pow(1.2, e.deltaY * -0.01);
+  // const newZoom = camera.zoom / Math.pow(1.2, delta * -0.01);
+  const newZoom = camera.zoom / multiplier;
 
   camera.zoom = Math.max(0.02, Math.min(100, newZoom));
 
@@ -498,40 +516,12 @@ export function zoom(e) {
   camera.y += preZoom.y - postZoom.y;
 }
 
-export function pan(e) {
-  let { x: x0, y: y0 } = camera;
-  let clipStart = mouseClip(e);
-
-  const move = (e) => {
-    if (e.buttons === 0) {
-      end();
-      return;
-    }
-
-    let clipCurrent = mouseClip(e);
-
-    let dxClip = Math.sign(camera.side) * (clipCurrent[0] - clipStart[0]);
-    let dyClip = clipCurrent[1] - clipStart[1];
-
-    camera.x = x0 - dxClip * camera.zoom;
-    camera.y = y0 - (dyClip * camera.zoom) / camera.aspect;
-
-    e.preventDefault();
-  };
-
-  function end() {
-    window.removeEventListener("pointermove", move);
-    window.removeEventListener("pointerup", end);
-    window.removeEventListener("pointerleave", end);
-  }
-
-  window.addEventListener("pointermove", move);
-  window.addEventListener("pointerup", end);
-  window.addEventListener("pointerleave", end);
-}
-
 export function mouseCell(e) {
-  const clip = mouseClip(e);
+  const clientPos = {
+    x: e.clientX,
+    y: e.clientY,
+  };
+  const clip = mouseClip(clientPos);
   const matrix = computeMatrix();
 
   const chartCoords = Vec3.m4transform(
@@ -542,11 +532,11 @@ export function mouseCell(e) {
   cell = [Math.floor(chartCoords[0]), Math.floor(chartCoords[1])];
 }
 
-function mouseClip(e) {
+function mouseClip(clientPos) {
   // get canvas relative css position
   const rect = gl.canvas.getBoundingClientRect();
-  const cssX = e.clientX - rect.left;
-  const cssY = e.clientY - rect.top;
+  const cssX = clientPos.x - rect.left;
+  const cssY = clientPos.y - rect.top;
 
   // get normalized 0 to 1 position across and down canvas
   const normalizedX = cssX / gl.canvas.clientWidth;
