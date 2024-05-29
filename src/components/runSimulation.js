@@ -6,7 +6,7 @@ function generateYarnView(state) {
   if (state.simDraw) state.simDraw = null;
 
   let { stopSim, relax, draw } = visualizeYarn(
-    new Swatch(state.chart, state.yarnSequence.pixels, state.rowMap),
+    new Swatch(state.chart, state.yarnSequence.data, state.rowMap),
     state.yarnPalette
   );
 

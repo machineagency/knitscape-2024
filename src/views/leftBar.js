@@ -36,7 +36,7 @@ function deleteYarn(index) {
     return;
   }
   const newPalette = GLOBAL_STATE.yarnPalette.filter((color, i) => i != index);
-  const newBitmap = GLOBAL_STATE.yarnSequence.pixels.map((bit) => {
+  const newBitmap = GLOBAL_STATE.yarnSequence.data.map((bit) => {
     if (bit == index) return 0;
     if (bit > index) return bit - 1;
     return bit;

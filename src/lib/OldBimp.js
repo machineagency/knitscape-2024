@@ -1,17 +1,17 @@
 export class Bimp {
-  constructor(width, height, data) {
+  constructor(width, height, pixels) {
     this.width = width;
     this.height = height;
-    this.data = new Uint8ClampedArray(data);
+    this.pixels = new Uint8ClampedArray(pixels);
   }
 
   static fromJSON(jsonObj) {
-    return new Bimp(jsonObj.width, jsonObj.height, jsonObj.data);
+    return new Bimp(jsonObj.width, jsonObj.height, jsonObj.pixels);
   }
 
   static empty(width, height, color) {
-    let data = new Array(width * height).fill(color);
-    return new Bimp(width, height, data);
+    let pixels = new Array(width * height).fill(color);
+    return new Bimp(width, height, pixels);
   }
 
   static fromTile(width, height, tile) {
@@ -45,7 +45,7 @@ export class Bimp {
 
   toJSON() {
     return {
-      data: Array.from(this.data),
+      pixels: Array.from(this.pixels),
       width: this.width,
       height: this.height,
     };
@@ -82,7 +82,7 @@ export class Bimp {
   }
 
   make2d() {
-    let copy = Array.from(this.data).slice();
+    let copy = Array.from(this.pixels).slice();
     let newArray = [];
     while (copy.length > 0) newArray.push(copy.splice(0, this.width));
     return newArray;
@@ -100,11 +100,11 @@ export class Bimp {
     if (x > this.width - 1 || x < 0 || y > this.height - 1 || y < 0) {
       return -1;
     }
-    return this.data.at(x + y * this.width);
+    return this.pixels.at(x + y * this.width);
   }
 
   draw(changes) {
-    let copy = this.data.slice();
+    let copy = this.pixels.slice();
     for (let { x, y, color } of changes) {
       if (x < 0 || y < 0 || x >= this.width || y >= this.height) continue;
       copy[x + y * this.width] = color;
@@ -117,7 +117,7 @@ export class Bimp {
     return this.draw([drawn]);
   }
 
-  flood([x, y], color) {
+  flood({ x, y }, color) {
     const targetColor = this.pixel(x, y);
     if (targetColor === color) return this.draw([]);
 
@@ -163,11 +163,11 @@ export class Bimp {
     return this.draw(changes);
   }
 
-  rect([x0, y0], [x1, y1], color) {
-    let xStart = Math.min(x0, x1);
-    let yStart = Math.min(y0, y1);
-    let xEnd = Math.max(x0, x1);
-    let yEnd = Math.max(y0, y1);
+  rect(start, end, color) {
+    let xStart = Math.min(start.x, end.x);
+    let yStart = Math.min(start.y, end.y);
+    let xEnd = Math.max(start.x, end.x);
+    let yEnd = Math.max(start.y, end.y);
     let changes = [];
 
     for (let y = yStart; y <= yEnd; y++) {
@@ -178,48 +178,23 @@ export class Bimp {
     return this.draw(changes);
   }
 
-  line([x0, y0], [x1, y1], color) {
-    const changes = [];
-    if (Math.abs(x0 - x1) > Math.abs(y0 - y1)) {
-      if (x0 > x1)
-        [[x0, y0], [x1, y1]] = [
-          [x1, y1],
-          [x0, y0],
-        ];
-      let slope = (y1 - y0) / (x1 - x0);
-      for (let [x, y] = [x0, y0]; x <= x1; x++) {
+  line(from, to, color) {
+    let changes = [];
+    if (Math.abs(from.x - to.x) > Math.abs(from.y - to.y)) {
+      if (from.x > to.x) [from, to] = [to, from];
+      let slope = (to.y - from.y) / (to.x - from.x);
+      for (let { x, y } = from; x <= to.x; x++) {
         changes.push({ x, y: Math.round(y), color });
         y += slope;
       }
     } else {
-      if (y0 > y1)
-        [[x0, y0], [x1, y1]] = [
-          [x1, y1],
-          [x0, y0],
-        ];
-      let slope = (x1 - x0) / (y1 - y0);
-      for (let [x, y] = [x0, y0]; y <= y1; y++) {
+      if (from.y > to.y) [from, to] = [to, from];
+      let slope = (to.x - from.x) / (to.y - from.y);
+      for (let { x, y } = from; y <= to.y; y++) {
         changes.push({ x: Math.round(x), y, color });
         x += slope;
       }
     }
     return this.draw(changes);
-  }
-
-  select([x0, y0], [x1, y1]) {
-    let xStart = Math.max(Math.min(x0, x1), 0);
-    let yStart = Math.max(Math.min(y0, y1), 0);
-    let xEnd = Math.min(Math.max(x0, x1), this.width - 1);
-    let yEnd = Math.min(Math.max(y0, y1), this.height - 1);
-
-    const data = [];
-
-    for (let y = yStart; y <= yEnd; y++) {
-      for (let x = xStart; x <= xEnd; x++) {
-        data.push(this.pixel(x, y));
-      }
-    }
-
-    return new Bimp(xEnd - xStart + 1, yEnd - yStart + 1, data);
   }
 }

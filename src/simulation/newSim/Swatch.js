@@ -1,6 +1,6 @@
 export class Swatch {
   constructor(bitmap, yarnSequence) {
-    this.ops = bitmap.pixels;
+    this.ops = bitmap.data;
     this.width = bitmap.width;
     this.height = bitmap.height;
     this.yarnSequence = Array.from({ length: bitmap.height }).map(

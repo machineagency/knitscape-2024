@@ -32,7 +32,7 @@ export function downloadBMP() {
   download(
     makeBMP(
       GLOBAL_STATE.repeat.bitmap,
-      GLOBAL_STATE.yarnSequence.pixels,
+      GLOBAL_STATE.yarnSequence.data,
       GLOBAL_STATE.yarnPalette
     ).src
   );

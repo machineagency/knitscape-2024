@@ -121,7 +121,7 @@ function setChartTextureData() {
     0, // border
     gl.RED, // format
     gl.UNSIGNED_BYTE, // type
-    chart.pixels // data
+    chart.data // data
   );
 
   // set the filtering so we don't need mips and it's not filtered

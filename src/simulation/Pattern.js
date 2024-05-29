@@ -2,7 +2,7 @@ const pixToOp = ["K", "P", "M", "T"];
 
 export class Pattern {
   constructor(bitmap) {
-    this.ops = Array.from(bitmap.pixels).map((val) => pixToOp[val]);
+    this.ops = Array.from(bitmap.data).map((val) => pixToOp[val]);
     this.width = bitmap.width;
     this.height = bitmap.height;
   }
