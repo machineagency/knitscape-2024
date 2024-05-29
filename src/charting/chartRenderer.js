@@ -90,10 +90,46 @@ let gl,
   outlineVAO,
   positionBuffer,
   boxBuffer,
-  chart;
+  chart,
+  chartTexture;
 
 let cell = [0, 0];
 let cellAspect = 1;
+
+export function updateChart(newChart) {
+  chart = newChart;
+
+  setChartTextureData();
+}
+
+function setChartTextureData() {
+  // use texture unit 0
+  gl.activeTexture(gl.TEXTURE0 + 0);
+  gl.bindTexture(gl.TEXTURE_2D, chartTexture);
+
+  // fill texture with 3x2 pixels
+  gl.pixelStorei(
+    gl.UNPACK_ALIGNMENT,
+    1 // alignment
+  );
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0, // level
+    gl.R8, // internal format
+    chart.width, // width
+    chart.height, // height
+    0, // border
+    gl.RED, // format
+    gl.UNSIGNED_BYTE, // type
+    chart.pixels // data
+  );
+
+  // set the filtering so we don't need mips and it's not filtered
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+}
 
 export function initChart(c, canvas) {
   gl = canvas.getContext("webgl2");
@@ -182,34 +218,9 @@ export function initChart(c, canvas) {
   // DATA TEXTURE
   ////////////////////////
 
-  const chartTexture = gl.createTexture();
+  chartTexture = gl.createTexture();
 
-  // use texture unit 0
-  gl.activeTexture(gl.TEXTURE0 + 0);
-  gl.bindTexture(gl.TEXTURE_2D, chartTexture);
-
-  // fill texture with 3x2 pixels
-  gl.pixelStorei(
-    gl.UNPACK_ALIGNMENT,
-    1 // alignment
-  );
-  gl.texImage2D(
-    gl.TEXTURE_2D,
-    0, // level
-    gl.R8, // internal format
-    chart.width, // width
-    chart.height, // height
-    0, // border
-    gl.RED, // format
-    gl.UNSIGNED_BYTE, // type
-    chart.pixels // data
-  );
-
-  // set the filtering so we don't need mips and it's not filtered
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  setChartTextureData();
 
   ////////////////////////
   // PALETTE TEXTURE
@@ -494,15 +505,14 @@ export function pan(startPos) {
   return onPan;
 }
 
-export function zoom(target, multiplier) {
-  const [clipX, clipY] = mouseClip(target);
+export function zoom(targetPos, multiplier) {
+  const [clipX, clipY] = mouseClip(targetPos);
 
   const preZoom = {
     x: clipX * camera.zoom,
     y: clipY * (camera.zoom / camera.aspect),
   };
 
-  // const newZoom = camera.zoom / Math.pow(1.2, delta * -0.01);
   const newZoom = camera.zoom / multiplier;
 
   camera.zoom = Math.max(0.02, Math.min(100, newZoom));
@@ -516,12 +526,8 @@ export function zoom(target, multiplier) {
   camera.y += preZoom.y - postZoom.y;
 }
 
-export function mouseCell(e) {
-  const clientPos = {
-    x: e.clientX,
-    y: e.clientY,
-  };
-  const clip = mouseClip(clientPos);
+export function updateMouse(pos) {
+  const clip = mouseClip(pos);
   const matrix = computeMatrix();
 
   const chartCoords = Vec3.m4transform(
@@ -530,6 +536,8 @@ export function mouseCell(e) {
   );
 
   cell = [Math.floor(chartCoords[0]), Math.floor(chartCoords[1])];
+
+  return cell;
 }
 
 function mouseClip(clientPos) {

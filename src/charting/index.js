@@ -1,49 +1,103 @@
 import {
   initChart,
+  updateChart,
   renderChart,
   fit,
   pan,
   zoom,
-  mouseCell,
+  updateMouse,
 } from "./chartRenderer";
 import { Bimp } from "../lib/Bimp";
-import { dragPanZoom } from "./dragPanZoom";
+import { pointerInteraction } from "./pointerInteraction";
+import { html, render } from "lit-html";
+import { stitches } from "../constants";
 
-const c = document.getElementById("chart");
-const fitBtn = document.getElementById("fit");
+const chartCanvas = document.getElementById("chart");
 
-// c.addEventListener("pointerdown", pan);
-// c.addEventListener("wheel", zoom);
-// c.addEventListener("pointermove", mouseCell);
+const tools = {
+  brush(chart, [startX, startY]) {
+    let lastCell = [startX, startY];
+    let lastChart = chart;
 
-fitBtn.addEventListener("click", fit);
+    function onMove(newCell) {
+      lastChart = lastChart.line(
+        { x: lastCell[0], y: lastCell[1] },
+        { x: newCell[0], y: newCell[1] },
+        stitches.PURL.id
+      );
 
-const eventCBs = {
-  pan: pan,
-  zoom: zoom,
+      lastCell = newCell;
+      return lastChart;
+    }
+
+    onMove(lastCell);
+    return onMove;
+  },
 };
 
-dragPanZoom(c, eventCBs);
+const state = {
+  tool: "brush",
+  chart: new Bimp(
+    8,
+    16,
+    [
+      1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 5, 1, 1, 1, 5, 1, 1, 1,
+      5, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 5,
+      1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 3, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1,
+      5, 1, 1,
+    ]
+  ),
+};
 
-const chart = new Bimp(
-  8,
-  16,
-  [
-    1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 5, 1, 1, 1, 5, 1, 1, 1,
-    5, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 5,
-    1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 3, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1,
-    5, 1, 1,
-  ]
-);
+function dragTool(startPointerPos) {
+  let lastCell = updateMouse(startPointerPos);
 
-initChart(chart, c);
+  let tool = tools[state.tool];
+  let onEnterCell = tool(state.chart, lastCell);
+
+  state.chart = onEnterCell(lastCell);
+  updateChart(state.chart);
+
+  function pointerMove(currentPointerPos) {
+    let currentCell = updateMouse(currentPointerPos);
+
+    if (currentCell[0] == lastCell[0] && currentCell[1] == lastCell[1]) return;
+
+    state.chart = onEnterCell(currentCell);
+    updateChart(state.chart);
+    lastCell = currentCell;
+  }
+
+  return pointerMove;
+}
+
+const eventCBs = {
+  drag: dragTool,
+  hover: updateMouse,
+  wheelDrag: pan,
+  pinchDrag: pan,
+  shiftDrag: pan,
+  pinch: zoom,
+  wheel: zoom,
+};
+
+const pointerTracking = pointerInteraction(chartCanvas, eventCBs);
+
+initChart(state.chart, chartCanvas);
 fit();
+
+function view() {
+  return html`<button @click=${fit}>Fit Chart</button>
+    <div>pointers: ${pointerTracking.eventCache.length}</div>
+    <div>interacting: ${pointerTracking.checkInteracting()}</div>`;
+}
 
 function r() {
   renderChart();
   window.requestAnimationFrame(r);
+  render(view(), document.getElementById("ui"));
 }
 
 r();
