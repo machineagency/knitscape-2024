@@ -34,22 +34,21 @@ export function repeatCanvas() {
                 <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
               </button> `
           )}
-          <div
+          <!-- <div
             class="repeat-bounds"
             style="width: ${(repeat.area[0] * GLOBAL_STATE.scale) /
-            devicePixelRatio}px; height: ${(repeat.area[1] *
-              GLOBAL_STATE.scale) /
-            devicePixelRatio}px;">
+          devicePixelRatio}px; height: ${(repeat.area[1] * GLOBAL_STATE.scale) /
+          devicePixelRatio}px;">
             ${when(
-              GLOBAL_STATE.editingRepeat == index,
-              () =>
-                html`<button class="repeat-area-dragger y-axis">
-                    <i class="fa-solid fa-angles-up"></i></button
-                  ><button class="repeat-area-dragger x-axis">
-                    <i class="fa-solid fa-angles-right"></i>
-                  </button>`
-            )}
-          </div>
+            GLOBAL_STATE.editingRepeat == index,
+            () =>
+              html`<button class="repeat-area-dragger y-axis">
+                  <i class="fa-solid fa-angles-up"></i></button
+                ><button class="repeat-area-dragger x-axis">
+                  <i class="fa-solid fa-angles-right"></i>
+                </button>`
+          )}
+          </div> -->
           <canvas id="repeat-${index}" class="repeat-canvas"></canvas>
           <canvas id="repeat-${index}-grid" class="grid-canvas"></canvas>
           <canvas id="repeat-${index}-outline" class="outline-canvas"></canvas>

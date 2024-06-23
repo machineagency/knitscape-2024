@@ -8,12 +8,12 @@ export function wheelInteraction(target) {
 
     if (Math.sign(e.deltaY) < 0) {
       scale = GLOBAL_STATE.reverseScroll
-        ? GLOBAL_STATE.scale - 1
-        : GLOBAL_STATE.scale + 1;
+        ? GLOBAL_STATE.scale * 0.85
+        : GLOBAL_STATE.scale * 1.1;
     } else {
       scale = GLOBAL_STATE.reverseScroll
-        ? GLOBAL_STATE.scale + 1
-        : GLOBAL_STATE.scale - 1;
+        ? GLOBAL_STATE.scale * 1.1
+        : GLOBAL_STATE.scale * 0.85;
     }
     zoomAtPoint(
       {

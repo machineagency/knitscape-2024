@@ -25,7 +25,7 @@ const hotkeys = {
       showLibrary: false,
       showSettings: false,
       showDownload: false,
-      editingRepeat: -1,
+      // editingRepeat: -1,
       showRepeatLibrary: false,
     }),
   d: () =>

@@ -8,16 +8,17 @@ import { Bimp } from "../lib/Bimp";
 function symbolPicker() {
   return html` <div id="symbol-picker">
     <h3>Symbols</h3>
-    ${GLOBAL_STATE.symbolMap.map(
-      (symbolName, index) => html`<button
+    ${GLOBAL_STATE.symbolMap.map((symbolName, index) => {
+      if (index == 1) return;
+      return html`<button
         class="btn solid img ${GLOBAL_STATE.activeSymbol == index
           ? "current"
           : ""}"
         @click=${() => dispatch({ activeSymbol: index })}>
         <div>${symbolName}</div>
         <canvas class="symbol-preview" data-symbol=${symbolName}></canvas>
-      </button>`
-    )}
+      </button>`;
+    })}
   </div>`;
 }
 
@@ -181,9 +182,9 @@ function addRepeat() {
 
 export function leftBar() {
   return html`<div id="left-bar" class="scroller">
-    <button class="btn solid add-repeat" @click=${() => addRepeat()}>
+    <!-- <button class="btn solid add-repeat" @click=${() => addRepeat()}>
       <i class="fa-solid fa-plus"></i>
-    </button>
+    </button> -->
     ${symbolPicker()} ${yarnPicker()}
   </div>`;
 }

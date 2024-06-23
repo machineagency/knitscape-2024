@@ -236,15 +236,15 @@ export function repeatPointerInteraction(repeatContainer) {
     const repeatIndex = getRepeatIndex(e.target);
     let classList = e.target.classList;
 
-    if (
-      GLOBAL_STATE.editingRepeat != repeatIndex &&
-      classList.contains("repeat-canvas")
-    ) {
-      // If we're not editing this repeat, begin editing it
-      console.log("NOW EDITING REPEAT", repeatIndex);
-      dispatch({ editingRepeat: repeatIndex });
-      return;
-    }
+    // if (
+    //   GLOBAL_STATE.editingRepeat != repeatIndex &&
+    //   classList.contains("repeat-canvas")
+    // ) {
+    //   // If we're not editing this repeat, begin editing it
+    //   console.log("NOW EDITING REPEAT", repeatIndex);
+    //   dispatch({ editingRepeat: repeatIndex });
+    //   return;
+    // }
 
     if (classList.contains("resize-repeat")) {
       // interacting with dragger
@@ -262,8 +262,6 @@ export function repeatPointerInteraction(repeatContainer) {
 
       if (activeTool in repeatEditingTools) {
         editRepeat(repeatIndex, e.target, repeatEditingTools[activeTool]);
-      } else if (activeTool == "move") {
-        moveRepeat(e, repeatIndex);
       } else {
         console.warn(`Uh oh, ${activeTool} is not a tool`);
       }

@@ -29,7 +29,7 @@ let GLOBAL_STATE = {
   yarnPalette: ["rgba(16,18,189,1)", "rgba(235,233,187,1)", "rgba(247,85,0,1)"], // Colors of the yarns
   yarnSequence: new Bimp(1, 8, [1, 1, 1, 1, 2, 2, 0, 0]),
 
-  editingRepeat: -1,
+  editingRepeat: 0,
   repeatPos: [-1, -1],
 
   repeats: [

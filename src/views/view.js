@@ -26,7 +26,7 @@ export function view() {
           ${leftBar()}
 
           <div id="desktop">
-            ${when(GLOBAL_STATE.editingRepeat > -1, repeatTools)}
+            ${repeatTools()}
             <div
               id="canvas-transform-group"
               style="transform: translate(${Math.floor(

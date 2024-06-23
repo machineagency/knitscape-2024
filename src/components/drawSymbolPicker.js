@@ -8,6 +8,7 @@ export function drawSymbolPicker(symbolCanvas) {
     function draw() {
       symbolMap.forEach((symbol) => {
         const canvas = document.querySelector(`[data-symbol=${symbol}]`);
+        if (!canvas) return;
         canvas.width = 50;
         canvas.height = 50;
         const ctx = canvas.getContext("2d");
