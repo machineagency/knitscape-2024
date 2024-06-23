@@ -122,7 +122,6 @@ EDIT PANE
 
 .overlay {
   position: absolute;
-  pointer-events: none;
   left: 0;
   bottom: 0;
   height: 100%;

@@ -112,7 +112,7 @@ function trackPointer(e) {
 }
 
 export function chartPane() {
-  const { chartPan, scale, repeat, chart } = GLOBAL_STATE;
+  const { chartPan, scale, repeat } = GLOBAL_STATE;
   const repeatWidth = scale * repeat.width;
   const repeatHeight = scale * repeat.height;
 
@@ -130,14 +130,12 @@ export function chartPane() {
             style="--cell-width: ${scale}px;
            --cell-height: ${scale}px;"></div>
         </div>
-        <canvas
-          id="chart-canvas"
-          @pointerdown=${chartPointer}
-          @pointermove=${trackPointer}></canvas>
-
+        <canvas id="chart-canvas"></canvas>
         <div
           class="overlay repeat-ui"
-          style="width: ${repeatWidth}px; height: ${repeatHeight}px;">
+          style="width: ${repeatWidth}px; height: ${repeatHeight}px;"
+          @pointerdown=${chartPointer}
+          @pointermove=${trackPointer}>
           <button
             class="grabber dragger up"
             @pointerdown=${(e) => resizeRepeat(e, "up")}>

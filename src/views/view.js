@@ -5,7 +5,7 @@ import { GLOBAL_STATE, dispatch } from "../state";
 import { taskbar } from "./taskbar";
 import { downloadModal } from "./downloadModal";
 import { libraryModal } from "./libraryModal";
-import { settingsModal } from "./settingsModal";
+// import { settingsModal } from "./settingsModal";
 
 import { simulationPane } from "./simulationPane";
 import { chartPane } from "./chartPane";
@@ -14,8 +14,7 @@ export function view() {
   const { activeModal } = GLOBAL_STATE;
   return html`
     ${when(activeModal == "download", downloadModal)}
-    ${when(activeModal == "library", libraryModal)}
-    ${when(activeModal == "settings", settingsModal)} ${taskbar()}
+    ${when(activeModal == "library", libraryModal)} ${taskbar()}
 
     <div
       id="site"

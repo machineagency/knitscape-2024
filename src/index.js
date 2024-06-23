@@ -12,10 +12,13 @@ import { drawChartOnChange } from "./components/drawChart";
 
 // Pointer/keyboard interaction
 import { addKeypressListeners } from "./events/keypressEvents";
+import { pointerInteraction } from "./pointerInteraction";
 import { desktopPointerPanZoom } from "./events/desktopPointerPanZoom";
 import { colorSequencePointerInteraction } from "./events/colorSequencePointerInteraction";
 import { runSimulation } from "./components/runSimulation";
 import { generateChart } from "./components/generateChart";
+
+import { eventCBs } from "./tools";
 
 let desktop, yarnSequenceEditorCanvas, colorDragger;
 
@@ -41,7 +44,8 @@ function init() {
   });
 
   addKeypressListeners();
-  desktopPointerPanZoom(desktop);
+  // desktopPointerPanZoom(desktop);
+  pointerInteraction(desktop, eventCBs);
   colorSequencePointerInteraction(yarnSequenceEditorCanvas, colorDragger);
 
   StateMonitor.register([

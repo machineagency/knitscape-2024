@@ -80,14 +80,14 @@ export function taskbar() {
           })}>
         <i class="fa-solid fa-book"></i>
       </button>
-      <button
+      <!-- <button
         class="btn ${activeModal == "settings" ? "open" : ""}"
         @click=${() =>
-          dispatch({
-            activeModal: activeModal == "settings" ? null : "settings",
-          })}>
+        dispatch({
+          activeModal: activeModal == "settings" ? null : "settings",
+        })}>
         <i class="fa-solid fa-gear"></i>
-      </button>
+      </button> -->
       <button
         class="btn"
         @click=${() =>

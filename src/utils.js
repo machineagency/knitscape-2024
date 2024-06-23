@@ -28,7 +28,7 @@ export function posAtCoords(event, target) {
   x = x < 0 ? 0 : x;
   y = y < 0 ? 0 : y;
 
-  return { x, y };
+  return [x, y];
 }
 
 export function debounce(func) {

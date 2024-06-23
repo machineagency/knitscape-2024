@@ -367,6 +367,7 @@ function computeMatrix() {
   const { x, y, side, zoom, up, near, far, aspect } = camera;
 
   const cameraMatrix = m4.lookAt([x, y, side], [x, y, 0], up);
+  // console.log(cameraMatrix);
   const viewMatrix = m4.inverse(cameraMatrix);
   const projectionMatrix = m4.orthographic(
     -1 * zoom,
