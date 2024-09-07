@@ -1,6 +1,5 @@
 import { html } from "lit-html";
 import { GLOBAL_STATE, dispatch } from "../state";
-import { LAYERS } from "../constants";
 import { getRandomColor, shuffle } from "../utils";
 import jscolor from "@eastdesire/jscolor";
 import { Bimp } from "../lib/Bimp";
@@ -9,7 +8,6 @@ function symbolPicker() {
   return html` <div id="symbol-picker">
     <h3>Symbols</h3>
     ${GLOBAL_STATE.symbolMap.map((symbolName, index) => {
-      if (index == 1) return;
       return html`<button
         class="btn solid img ${GLOBAL_STATE.activeSymbol == index
           ? "current"
@@ -19,28 +17,6 @@ function symbolPicker() {
         <canvas class="symbol-preview" data-symbol=${symbolName}></canvas>
       </button>`;
     })}
-  </div>`;
-}
-
-function motifLibrary() {
-  return html`<div id="repeat-library">
-    <h2>Motifs</h2>
-    <div id="repeat-library-content" class="scroller">
-      ${GLOBAL_STATE.repeatLibrary.map(
-        (repeat, index) => html`
-          <div class="repeat-library-canvas">
-            <canvas
-              data-repeattitle=${repeat.title}
-              draggable="true"
-              data-repeatlibraryindex=${index}></canvas>
-          </div>
-          <div class="repeat-size">
-            ${repeat.bitmap.width}x${repeat.bitmap.height}
-          </div>
-          <div class="repeat-title">${repeat.title}</div>
-        `
-      )}
-    </div>
   </div>`;
 }
 
@@ -164,27 +140,8 @@ function yarnPicker() {
   </div>`;
 }
 
-function addRepeat() {
-  const newBitmap = Bimp.empty(2, 2, [0, 0, 0, 0]);
-
-  dispatch({
-    repeats: [
-      ...GLOBAL_STATE.repeats,
-      {
-        bitmap: newBitmap,
-        area: [newBitmap.width, newBitmap.height],
-        pos: [0, 0],
-      },
-    ],
-    editingRepeat: GLOBAL_STATE.repeats.length,
-  });
-}
-
 export function leftBar() {
   return html`<div id="left-bar" class="scroller">
-    <!-- <button class="btn solid add-repeat" @click=${() => addRepeat()}>
-      <i class="fa-solid fa-plus"></i>
-    </button> -->
     ${symbolPicker()} ${yarnPicker()}
   </div>`;
 }

@@ -1,5 +1,6 @@
 import { bmp_lib } from "./lib/bmp";
 import { GLOBAL_STATE } from "./state";
+import { OPERATIONS } from "./constants";
 
 export function generateChart(repeats) {
   let chart = GLOBAL_STATE.chart;
@@ -118,28 +119,11 @@ export function shuffle(arr) {
   return arr.sort(() => (Math.random() > 0.5 ? 1 : -1));
 }
 
-export function makeBMP(repeatBimp, colorRepeat, palette) {
-  console.log(repeatBimp, colorRepeat, palette);
-  const height = leastCommonMultiple(repeatBimp.height, colorRepeat.length);
+export function makeBMP(repeatBimp) {
   const bmp2d = repeatBimp.make2d();
-  const bits = [];
-
-  for (let rowIndex = 0; rowIndex < height; rowIndex++) {
-    bits.push(
-      bmp2d[rowIndex % repeatBimp.height].map((bit) => {
-        if (bit == 0 || bit == 1) {
-          return colorRepeat[rowIndex % colorRepeat.length];
-        } else {
-          return palette.length;
-        }
-      })
-    );
-  }
-
-  const rgbPalette = palette.map((hex) => hexToRgb(hex));
-  rgbPalette.push([255, 255, 255]);
-
+  const rgbPalette = OPERATIONS.map((op) => hexToRgb(op.color));
   const im = document.createElement("img");
-  bmp_lib.render(im, bits, rgbPalette);
+
+  bmp_lib.render(im, bmp2d, rgbPalette);
   return im;
 }

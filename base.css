@@ -320,6 +320,7 @@ button.btn {
   align-self: start;
 
   padding: 0.5em;
+  cursor: pointer;
 }
 
 a.btn:hover,
@@ -374,6 +375,11 @@ button.btn.solid {
   box-shadow: 0 0 2px 0 black;
 }
 
+button.btn.solid:hover {
+  background-color: #383838;
+  box-shadow: 0 0 4px 0 black;
+}
+
 /***********************************
 
 MODAL
@@ -391,6 +397,7 @@ MODAL
   padding: 0.5em 0.6em;
   border-radius: 10px;
   box-shadow: var(--modal-shadow);
+  border: 1px solid #8d8d8d;
 }
 
 .modal > h2 {

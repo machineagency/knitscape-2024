@@ -9,34 +9,31 @@ import {
   downloadPunchcard,
 } from "../actions/exporters";
 
-import { punchCardSVG } from "../punchcard";
+import { punchCardSVG } from "./punchcard";
 
 import { GLOBAL_STATE, dispatch } from "../state";
 
 export function downloadModal() {
   return html` <div class="modal">
-    <h2>Download Pattern</h2>
     <div class="modal-content">
-      <button class="btn solid" @click=${() => downloadJSON()}>
-        Pattern JSON
-      </button>
-      <!-- <button class="btn solid" @click=${() =>
-        downloadPNG()}>Chart PNG</button>
-      <button class="btn solid" @click=${() => downloadSVG()}>
-        Simulation SVG
-      </button> -->
-      <!-- <button class="btn solid" @click=${() => downloadBMP()}>
-        Windows BMP (Silver Knit)
-      </button> -->
-      <button class="btn solid" @click=${() => downloadSilverKnitTxt()}>
-        TXT (Silver Knit)
-      </button>
-      <button class="btn solid" @click=${() => downloadKniterate()}>
-        Kniterate TXT Import
-      </button>
-
-      <h3>Punchcard</h3>
-
+      <h2>Export Workspace</h2>
+      <div style="display: flex; gap: 5px;">
+        <button class="btn solid" @click=${() => downloadJSON()}>
+          Workspace JSON
+        </button>
+      </div>
+      <h2>Export Repeat</h2>
+      <div style="display: flex; gap: 5px;">
+        <button class="btn solid" @click=${() => downloadBMP()}>BMP</button>
+        <button class="btn solid" @click=${() => downloadSilverKnitTxt()}>
+          TXT (SilverKnit)
+        </button>
+        <button class="btn solid" @click=${() => downloadKniterate()}>
+          TXT (Kniterate)
+        </button>
+      </div>
+      <h2>Punchcard</h2>
+      <p>Supports Brother/Taitexma 24-stitch punchcards.</p>
       <label class="form-control range">
         Vertical Repeats
         <input
@@ -53,11 +50,10 @@ export function downloadModal() {
             })} />
       </label>
 
+      ${punchCardSVG()}
       <button class="btn solid" @click=${() => downloadPunchcard()}>
         Download Punchcard SVG
       </button>
-
-      <div class="punchcard-preview">${punchCardSVG()}</div>
     </div>
   </div>`;
 }

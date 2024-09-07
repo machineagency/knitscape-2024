@@ -1,6 +1,6 @@
 import { html, svg } from "lit-html";
-import { GLOBAL_STATE } from "./state";
-import { Bimp } from "./lib/Bimp";
+import { GLOBAL_STATE } from "../state";
+import { Bimp } from "../lib/Bimp";
 
 const machineConfigs = {
   th860: {
@@ -106,14 +106,18 @@ function cardWidth() {
 }
 
 export function punchCardSVG() {
-  return html`<svg
-    id="punchcard"
-    viewBox="0 0 ${cardWidth()} ${cardHeight()}"
-    width="${cardWidth()}mm"
-    height="${cardHeight()}mm">
-    <g stroke="black" stroke-width="0.5" fill="none">
-      <rect width="${cardWidth()}" height="${cardHeight()}" />
-      ${overlap()}${belt()}${loop()}${pattern()}
-    </g>
-  </svg>`;
+  return html` <div class="punchcard-preview">
+    
+    <svg
+      id="punchcard"
+      viewBox="0 0 ${cardWidth()} ${cardHeight()}"
+      width="${cardWidth()}mm"
+      height="${cardHeight()}mm">
+      <g stroke="black" stroke-width="0.5" fill="none">
+        <rect width="${cardWidth()}" height="${cardHeight()}" />
+        ${overlap()}${belt()}${loop()}${pattern()}
+      </g>
+    </svg>
+  </div>
+</div>`;
 }

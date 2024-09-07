@@ -689,4 +689,6 @@ RESIZE DRAGGER
 #punchcard {
   height: 100%;
   background-color: #fff;
+  border-radius: 5px;
+  padding: 5px;
 }
