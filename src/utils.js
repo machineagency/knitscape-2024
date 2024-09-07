@@ -1,4 +1,3 @@
-import { bmp_lib } from "./lib/bmp";
 import { GLOBAL_STATE } from "./state";
 import { OPERATIONS } from "./constants";
 
@@ -94,17 +93,34 @@ export function isMobile() {
   return check;
 }
 
-function leastCommonMultiple(first, second) {
-  let min = first > second ? first : second;
-  while (true) {
-    if (min % first == 0 && min % second == 0) {
-      return min;
-    }
-    min++;
+// function leastCommonMultiple(first, second) {
+//   let min = first > second ? first : second;
+//   while (true) {
+//     if (min % first == 0 && min % second == 0) {
+//       return min;
+//     }
+//     min++;
+//   }
+// }
+
+export function createRepeatImagedata(bimp) {
+  const imageData = new ImageData(bimp.width, bimp.height);
+
+  // Fill imageData with colors based on the repeat
+  for (let index = 0; index < bimp.pixels.length; index++) {
+    const op = bimp.pixels[index];
+    const color = hexToRgb(OPERATIONS[op].color); // RGB color from operation hex color
+
+    imageData.data[index * 4] = color[0]; // Red
+    imageData.data[index * 4 + 1] = color[1]; // Green
+    imageData.data[index * 4 + 2] = color[2]; // Blue
+    imageData.data[index * 4 + 3] = 255; // Alpha
   }
+
+  return imageData;
 }
 
-function hexToRgb(hex) {
+export function hexToRgb(hex) {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? [
@@ -117,13 +133,4 @@ function hexToRgb(hex) {
 
 export function shuffle(arr) {
   return arr.sort(() => (Math.random() > 0.5 ? 1 : -1));
-}
-
-export function makeBMP(repeatBimp) {
-  const bmp2d = repeatBimp.make2d();
-  const rgbPalette = OPERATIONS.map((op) => hexToRgb(op.color));
-  const im = document.createElement("img");
-
-  bmp_lib.render(im, bmp2d, rgbPalette);
-  return im;
 }
