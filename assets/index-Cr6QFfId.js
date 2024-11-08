@@ -9,7 +9,7 @@
  * Copyright 2021 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */function _e(i,t,r){return i?t(i):r==null?void 0:r(i)}function Sn(i){let{yarnSequence:t,yarnPalette:r,repeats:e,width:n,height:s}=i;m({yarnPalette:r,width:n,height:s,yarnSequence:F.fromJSON(t),chart:F.empty(n,s,0),repeats:e.map(({bitmap:a,pos:o,area:l})=>({bitmap:F.fromJSON(a),pos:o,area:l}))}),ke()}function xi(){m({repeats:[],yarnSequence:new F(1,4,[0,0,1,1]),yarnPalette:[Ze(),Ze()],chart:F.empty(30,40,0),repeats:[{bitmap:new F(4,4,[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]),area:[30,40],pos:[0,0]}]}),ke()}function _i(i){m({showLibrary:!1}),c.patternLibrary[i]().then(t=>Sn(t))}function Ei(){let i=document.createElement("input");i.setAttribute("type","file"),i.style.display="none",document.body.appendChild(i),i.click(),i.onchange=t=>{let r=t.target.files[0];const e=new FileReader;e.readAsText(r),e.onload=()=>{Sn(JSON.parse(e.result))}},document.body.removeChild(i)}function Si(i){i=i>500?500:i,m({chart:c.chart.resize(i,c.chart.height)}),ke()}function ki(i){i=i>500?500:i,m({chart:c.chart.resize(c.chart.width,i)}),ke()}function Pi(){return V`<div id="taskbar">
-    <h1 class="site-title">KnitScape</h1>
+    <h1 class="site-title">KnitScape-2024</h1>
     <div id="chart-size-controls">
       <label>Width</label>
       <input
