@@ -25,7 +25,7 @@ function updateChartHeight(newHeight) {
 
 export function taskbar() {
   return html`<div id="taskbar">
-    <h1 class="site-title">KnitScape</h1>
+    <h1 class="site-title">KnitScape-2024</h1>
     <div id="chart-size-controls">
       <label>Width</label>
       <input
