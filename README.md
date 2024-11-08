@@ -1,8 +1,7 @@
-# knitscape
+# KnitScape-2024
 
-knitscape is tool for designing pattern repeats for knit slip/tuck colorwork. It
-was developed with domestic knitting machines in mind, but the charts are
-suitable for hand-knitting as well.
+KnitScape is a design and simulation tool for designing pattern repeats for knit slip/tuck colorwork patterns. This is an archival version of the KnitScape editor which accompanies the CHI 2024 paper [KnitScape: Computational Design and Yarn-Level Simulation of Slip and Tuck Colorwork Knitting Patterns](https://dl.acm.org/doi/10.1145/3613904.3642799). 
+
 
 ## features
 
