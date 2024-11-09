@@ -1,4 +1,4 @@
-# knitscape-2024
+# KnitScape-2024
 
 KnitScape is a design and simulation tool for machine knitting built by Hannah
 Twigg-Smith. 
@@ -24,3 +24,6 @@ Make sure you have Node installed. We tested this with Node version ~20.
 2. `npm run dev`
 
 To deploy, run `npm run deploy`.
+
+## Documentation
+[Documentation lives on this github repo's wiki!](https://github.com/machineagency/knitscape-2024/wiki).
