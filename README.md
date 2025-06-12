@@ -3,7 +3,7 @@
 KnitScape is a design and simulation tool for machine knitting built by Hannah
 Twigg-Smith. 
 
-# [You can use KnitScape-2024 here!](https//machineagency.github.io/knitscape-2024)
+# [You can use KnitScape-2024 here!](https://machineagency.github.io/knitscape-2024)
 
 This is an archival version of the KnitScape editor specifically
 for designing slip and tuck colorwork patterns which accompanies the CHI 2024
